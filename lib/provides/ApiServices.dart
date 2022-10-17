@@ -32,12 +32,16 @@ class ApiServices {
   static Future<dynamic> postData(url, body) async {
     if (kDebugMode) print(url);
     if (kDebugMode) print(body);
+    Map<String, String> userheader = {"Content-Type": "application/json"};
     try {
-      var resp = await http.post(url, body: body);
+      var resp =
+          await http.post(url, body: json.encode(body), headers: userheader);
       if (kDebugMode) print(resp.body);
 
-      if (resp.statusCode == 200) {
+      if (resp.statusCode == 201) {
         return successResp;
+      } else if (resp.statusCode == 200) {
+        return json.decode(resp.body);
       } else if (resp.statusCode == 415) {
         return falseResp;
       } else if (resp.statusCode == 500) {
