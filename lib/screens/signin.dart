@@ -243,7 +243,7 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
           InkWell(
             onTap: () {
-              Navigator.of(context).pushReplacement(
+              Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const SignUpPage()));
             },
             child: const TextWidget(

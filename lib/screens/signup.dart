@@ -55,7 +55,7 @@ class _SignUpState extends State<SignUpPage> {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 10,
+                  height: 50,
                 ),
                 const Align(
                   alignment: Alignment.centerLeft,
@@ -112,10 +112,11 @@ class _SignUpState extends State<SignUpPage> {
                     });
                   }
                   var req = {
-                    "userId": "dsep_bpp_test_0011",
-                    "password": "nsdl@123",
-                    "location": "Mumbai",
-                    "fullName": "Test BPP"
+                    "userId": _userIdController.text,
+                    "password": _passWord.text,
+                    "location": _location.text,
+                    "fullName": _name.text,
+                    "providerId": "5f554478-0c1e-4f8f-83ab-f5a95394a3ee"
                   };
                   ApiServices().signUpUser(req).then((value) {
                     if (value["status"] == true) {
