@@ -6,13 +6,13 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../utils/api.dart';
+import '../utils/globals.dart';
 
 class ApiServices {
   static var timeoutrespon = {"status": false, "message": "timeout"};
   static var successResp = {'status': true, "message": "response fetched"};
   static var falseResp = {"status": false, "message": "failed to get response"};
-  static String authroziation =
-      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkc2VwX2JwcF90ZXN0XzAwMTAiLCJzY29wZXMiOiJST0xFX0FETUlOIiwiaWF0IjoxNjY2MTUyNzA2LCJleHAiOjE2NjYxNzA3MDZ9.uLrjWvQOlE8BlsCSJxs4plONmoPQEXskF01H6fv_G1I";
+  static String authroziation = "Bearer ${Global.token}";
   Future loginUserVerifyApi(data) async {
     try {
       // Api for Login username or Password Verification

@@ -2,6 +2,8 @@ import 'dart:io' show Platform, exit;
 import 'package:dsep_bpp/screens/home_screen.dart';
 import 'package:dsep_bpp/screens/signup.dart';
 import 'package:dsep_bpp/screens/tabbar.dart';
+import 'package:dsep_bpp/utils/globals.dart';
+import 'package:dsep_bpp/widgets/custom_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
@@ -52,7 +54,7 @@ class _SignInScreenState extends State<SignInScreen> {
   late String formString;
   var ErrorMessage = "";
   var ErrorMessageControler = TextEditingController();
-
+  bool _isloading = false;
   @override
   void initState() {
     super.initState();
@@ -132,6 +134,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         const SizedBox(height: 10),
                         welcomeTextRow(),
                         form(context),
+
                         button(),
                         // Flexible(
                         //   child: SizedBox(
@@ -199,7 +202,6 @@ class _SignInScreenState extends State<SignInScreen> {
             SizedBox(
               height: _height * 0.045,
             ),
-            
           ],
         ),
       ),
@@ -230,42 +232,45 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-
   Widget button() {
     return SizedBox(
       height: _large ? 50 : (_medium ? 50 : 40),
       width: _width / 1.8,
-      child: PlatformElevatedButton(
-        color: Theme.of(context).primaryColor,
-        onPressed: () {
-          if (emailController.text.isNotEmpty &&
-              passwordController.text.isNotEmpty) {
-            //_submit(uidController.text);
-            var Data = {
-               "userId": emailController.text,
-               "password": passwordController.text
-              //  "userId3":"dsep_bpp_test_0001",
-              //  "password":"test@123"
-            };
-            validate(Data);
-          } else {
-            Fluttertoast.showToast(
-                msg: "Enter Username and password...",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 3,
-                backgroundColor: Colors.black,
-                textColor: Colors.white,
-                fontSize: 16.0);
-            //_showerrorDialog('Invalid UID');
-          }
-        },
-        padding: const EdgeInsets.all(8),
-        child: Text(
-          'Login',
-          style: TextStyle(fontSize: _large ? 25 : (_medium ? 20 : 15)),
-        ),
-      ),
+      child: _isloading
+          ? Loader()
+          : PlatformElevatedButton(
+              color: Theme.of(context).primaryColor,
+              onPressed: () {
+                if (emailController.text.isNotEmpty &&
+                    passwordController.text.isNotEmpty) {
+                  //_submit(uidController.text);
+                  var Data = {
+                    "userId": emailController.text,
+                    "password": passwordController.text
+                    //  "userId3":"dsep_bpp_test_0001",
+                    //  "password":"test@123"
+                  };
+                  _isloading = true;
+                  setState(() {});
+                  validate(Data);
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "Enter Username and password...",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 3,
+                      backgroundColor: Colors.black,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                  //_showerrorDialog('Invalid UID');
+                }
+              },
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                'Login',
+                style: TextStyle(fontSize: _large ? 25 : (_medium ? 20 : 15)),
+              ),
+            ),
     );
   }
 
@@ -349,27 +354,47 @@ class _SignInScreenState extends State<SignInScreen> {
       var response = await http.post(Uri.parse(Api.signin),
           body: data1, headers: headers1);
       if (response.statusCode == 200) {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const Tabbar()));
-      } else if (response.statusCode == 401) {
-        
+        var resp = jsonDecode(response.body);
+        _isloading = false;
+        setState(() {});
+        print(resp);
+        Global.token = resp['token'];
+        print(Global.token);
         Fluttertoast.showToast(
-                msg: "Incorrect Username Or Password",
+                msg: "Logged In SuccessFully",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIosWeb: 3,
                 backgroundColor: Colors.black,
                 textColor: Colors.white,
-                fontSize: 16.0);
+                fontSize: 16.0)
+            .then((value) {
+          Future.delayed(
+            Duration(seconds: 2),
+            () {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const Tabbar()));
+            },
+          );
+        });
+      } else if (response.statusCode == 401) {
+        Fluttertoast.showToast(
+            msg: "Incorrect Username Or Password",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            fontSize: 16.0);
       } else {
         Fluttertoast.showToast(
-                msg: "Something went wrong please try after sometime",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 3,
-                backgroundColor: Colors.black,
-                textColor: Colors.white,
-                fontSize: 16.0);
+            msg: "Something went wrong please try after sometime",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            fontSize: 16.0);
       }
       //_showerrorDialog('Invalid UID');
 
@@ -401,7 +426,7 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void _onLoading(BuildContext context) {
-    showDialog(    
+    showDialog(
         context: context,
         builder: (BuildContext context) {
           return Center(
