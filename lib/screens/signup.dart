@@ -27,6 +27,7 @@ class _SignUpState extends State<SignUpPage> {
   late double _pixelRatio;
   late bool _large;
   late bool _medium;
+  late double _top;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +35,7 @@ class _SignUpState extends State<SignUpPage> {
     _pixelRatio = MediaQuery.of(context).devicePixelRatio;
     _large = Responsive.isScreenLarge(_width, _pixelRatio);
     _medium = Responsive.isScreenMedium(_width, _pixelRatio);
+    _top = MediaQuery.of(context).viewPadding.top;
     return SafeArea(
         top: false,
         child: Scaffold(
@@ -54,8 +56,23 @@ class _SignUpState extends State<SignUpPage> {
               child: SingleChildScrollView(
             child: Column(
               children: [
+                Padding(
+                  //padding: EdgeInsets.only(top: _top * 5.5),
+                  padding: _large
+                      ? EdgeInsets.only(top: _top * 5.5)
+                      : _medium
+                          ? (EdgeInsets.only(top: _top * 1.5))
+                          : (EdgeInsets.only(top: _top * 2.5)),
+                  child: Image.asset(
+                    'assets/images/protean_logo.png',
+                    width: _width / 2,
+                    height: _width / 4,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                const SizedBox(height: 10),
                 const SizedBox(
-                  height: 50,
+                  height: 30,
                 ),
                 const Align(
                   alignment: Alignment.centerLeft,

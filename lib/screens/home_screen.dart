@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:dsep_bpp/screens/create_scheme_screen.dart';
+import 'package:dsep_bpp/widgets/custom_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter/services.dart'
@@ -8,15 +11,18 @@ import 'package:is_first_run/is_first_run.dart';
 import 'package:provider/provider.dart';
 import '../advance_search.dart';
 import 'package:showcaseview/showcaseview.dart';
+import '../utils/api.dart';
 import '../utils/colors_widget.dart';
 import '../utils/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/custom_drawer/drawer_user_controller.dart';
 import '../widgets/custom_drawer/home_drawer.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   int? value;
+  //var schemeData;
   HomePage({Key? key, this.value}) : super(key: key);
 
   @override
@@ -36,134 +42,10 @@ class _HomePageState extends State<HomePage> {
   bool StartDateSelectedStatus = false;
   bool EndDateSelectedStatus = false;
   var color = 0xffe3f2fd;
-  var schemeData = [
-    {
-      "schemeID": "123",
-      "schemeName":
-          "Vivo for Education Scholarship Programme (Post Graduate) Jharkhand 2022-23",
-      "schemeDescription": "Vivo",
-      "schemeProviderID": "123",
-      "schemeProviderName": "Vivo",
-      "schemeProviderDescription": "Vivo",
-      "schemeType": "Scholarship",
-      "financialYear": "2022-2023",
-      "schemeFor": [
-        {
-          "courseLevelID": "",
-          "courseLevelName": "Under Graduate",
-          "courseID": "",
-          "courseName": ""
-        }
-      ],
-      "schemeAmount": "20000",
-      "eligibility": {
-        "pastEducation": [
-          {
-            "courseLevelID": "",
-            "courseLevelName": "Higher Secondary",
-            "courseID": "",
-            "courseName": "HSC-Science",
-            "instituteName": "",
-            "instituteState": "",
-            "universityOrBoard": "",
-            "scoreType": "Percentage",
-            "scoreValue": "60|100"
-          },
-          {
-            "courseLevelID": "",
-            "courseLevelName": "",
-            "courseID": "",
-            "courseName": "SSC",
-            "instituteName": "",
-            "instituteState": "",
-            "universityOrBoard": "",
-            "scoreType": "CGPA",
-            "scoreValue": "6.5|10"
-          }
-        ],
-        "gender": "female",
-        "familyIncome": "less than 100000",
-        "state": "Haryana",
-        "district": "Mahendergarh",
-        "cityOrBlockOrTaluka": "Mahendergarh",
-        "nationality": "Indian",
-        "religon": "Hindu",
-        "caste": "Aggarwal"
-      },
-      "isActive": "Yes",
-      "startDate": "2022-06-01",
-      "endDate": "2022-07-31",
-      "documentsTobeSubmitted": "",
-      "spocName": "Vivo",
-      "spocEmail": "abc@gmail.com",
-      "helpdeskNo": "",
-      "schemeProviderWebsite": "",
-      "termsAndConditions": ""
-    },
-    {
-      "schemeID": "321",
-      "schemeName":
-          "Oppo for Education Scholarship Programme (Post Graduate) Jharkhand 2022-23",
-      "schemeDescription": "Oppo",
-      "schemeProviderID": "321",
-      "schemeProviderName": "oppo",
-      "schemeProviderDescription": "Oppo",
-      "schemeType": "Scholarship",
-      "financialYear": "2022-2023",
-      "schemeFor": [
-        {
-          "courseLevelID": "",
-          "courseLevelName": "Under Graduate",
-          "courseID": "",
-          "courseName": ""
-        }
-      ],
-      "schemeAmount": "20000",
-      "eligibility": {
-        "pastEducation": [
-          {
-            "courseLevelID": "",
-            "courseLevelName": "Higher Secondary",
-            "courseID": "",
-            "courseName": "HSC-Science",
-            "instituteName": "",
-            "instituteState": "",
-            "universityOrBoard": "",
-            "scoreType": "Percentage",
-            "scoreValue": "60|100"
-          },
-          {
-            "courseLevelID": "",
-            "courseLevelName": "",
-            "courseID": "",
-            "courseName": "SSC",
-            "instituteName": "",
-            "instituteState": "",
-            "universityOrBoard": "",
-            "scoreType": "CGPA",
-            "scoreValue": "6.5|10"
-          }
-        ],
-        "gender": "female",
-        "familyIncome": "less than 100000",
-        "state": "Haryana",
-        "district": "Mahendergarh",
-        "cityOrBlockOrTaluka": "Mahendergarh",
-        "nationality": "Indian",
-        "religon": "Hindu",
-        "caste": "Aggarwal"
-      },
-      "isActive": "No",
-      "startDate": "2022-06-01",
-      "endDate": "2022-07-31",
-      "documentsTobeSubmitted": "",
-      "spocName": "Oppo",
-      "spocEmail": "abc@gmail.com",
-      "helpdeskNo": "",
-      "schemeProviderWebsite": "",
-      "termsAndConditions": ""
-    }
-  ];
+  var schemeDatanew;
+  bool _isloading = false;
+
+  var schemeData;
   final GlobalKey _one = GlobalKey();
   final GlobalKey _two = GlobalKey();
   final GlobalKey _three = GlobalKey();
@@ -186,6 +68,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    _isloading = true;
+    GetAllSchemeList();
+
+    print("type schemedata $schemeData.runtimeType");
+    print("type schemedatanew $schemeDatanew.runtimeType");
+
     if (Global.isfirstlogin == true) {
     } else {
       startShowCase();
@@ -198,6 +87,8 @@ class _HomePageState extends State<HomePage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenFontMedium = screenHeight * 0.017;
     final screenFontSmall = screenHeight * 0.014;
+
+    var i = 0;
 
     return SafeArea(
       top: false,
@@ -212,7 +103,9 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Theme.of(context).primaryColor,
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const CreateScheme()));
+                    builder: (context) => CreateScheme(
+                          routeFrom: "home",
+                        )));
               },
               child: const Icon(
                 Icons.add,
@@ -443,78 +336,88 @@ class _HomePageState extends State<HomePage> {
             key: _three,
             description: 'List of all created schemas',
             overlayPadding: const EdgeInsets.all(10),
-            child: ReusbaleRow(
-                indexOnject: schemeData,
-                optionTypeSelect: (String selectedOption, int index) async {
-                  // print("abc " + selectedOption + index.toString());
-                  if (selectedOption == "Publish") {
-                    var result = await FlutterPlatformAlert.showCustomAlert(
-                      windowTitle: 'Do you want to Publish this?',
-                      text: '',
-                      positiveButtonTitle: "Yes",
-                      negativeButtonTitle: "No",
-                      options: FlutterPlatformAlertOption(
-                          additionalWindowTitleOnWindows: 'Window title',
-                          showAsLinksOnWindows: true),
-                    );
-                    print(result);
-                  } else if (selectedOption == "UnPublish") {
-                    var result = await FlutterPlatformAlert.showCustomAlert(
-                      windowTitle: 'Do you want to UnPublish this?',
-                      text: '',
-                      positiveButtonTitle: "Yes",
-                      negativeButtonTitle: "No",
-                      options: FlutterPlatformAlertOption(
-                          additionalWindowTitleOnWindows: 'Window title',
-                          showAsLinksOnWindows: true),
-                    );
-                    print(result);
-                  } else if (selectedOption == "Edit") {
-                    var result = await FlutterPlatformAlert.showCustomAlert(
-                      windowTitle: 'Do you want to Edit this?',
-                      text: '',
-                      positiveButtonTitle: "Yes",
-                      negativeButtonTitle: "No",
-                      options: FlutterPlatformAlertOption(
-                          additionalWindowTitleOnWindows: 'Window title',
-                          showAsLinksOnWindows: true),
-                    );
-                    print(result);
-                  } else if (selectedOption == "Delete") {
-                    var result = await FlutterPlatformAlert.showCustomAlert(
-                      windowTitle: 'Do you want to delete this?',
-                      text: '',
-                      positiveButtonTitle: "Yes",
-                      negativeButtonTitle: "No",
-                      options: FlutterPlatformAlertOption(
-                          additionalWindowTitleOnWindows: 'Window title',
-                          showAsLinksOnWindows: true),
-                    );
-                    print(result);
-                  }
-                }),
+            child: _isloading
+                ? Loader()
+                : ReusbaleRow(
+                    indexOnject: schemeData,
+                    optionTypeSelect: (String selectedOption, int index) async {
+                      // print("abc " + selectedOption + index.toString());
+                      if (selectedOption == "Publish") {
+                        var result = await FlutterPlatformAlert.showCustomAlert(
+                          windowTitle: 'Do you want to Publish this?',
+                          text: '',
+                          positiveButtonTitle: "Yes",
+                          negativeButtonTitle: "No",
+                          options: FlutterPlatformAlertOption(
+                              additionalWindowTitleOnWindows: 'Window title',
+                              showAsLinksOnWindows: true),
+                        );
+                        print(result);
+                      } else if (selectedOption == "UnPublish") {
+                        var result = await FlutterPlatformAlert.showCustomAlert(
+                          windowTitle: 'Do you want to UnPublish this?',
+                          text: '',
+                          positiveButtonTitle: "Yes",
+                          negativeButtonTitle: "No",
+                          options: FlutterPlatformAlertOption(
+                              additionalWindowTitleOnWindows: 'Window title',
+                              showAsLinksOnWindows: true),
+                        );
+                        print(result);
+                      } else if (selectedOption == "Edit") {
+                        var result = await FlutterPlatformAlert.showCustomAlert(
+                          windowTitle: 'Do you want to Edit this?',
+                          text: '',
+                          positiveButtonTitle: "Yes",
+                          negativeButtonTitle: "No",
+                          options: FlutterPlatformAlertOption(
+                              additionalWindowTitleOnWindows: 'Window title',
+                              showAsLinksOnWindows: true),
+                        );
+
+                        if (result == CustomButton.positiveButton) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => CreateScheme(
+                                    routeFrom: "update",
+                                    data: schemeData[index],
+                                  )));
+                        }
+                        print("result ------ $result");
+                      } else if (selectedOption == "Delete") {
+                        var result = await FlutterPlatformAlert.showCustomAlert(
+                          windowTitle: 'Do you want to delete this?',
+                          text: '',
+                          positiveButtonTitle: "Yes",
+                          negativeButtonTitle: "No",
+                          options: FlutterPlatformAlertOption(
+                              additionalWindowTitleOnWindows: 'Window title',
+                              showAsLinksOnWindows: true),
+                        );
+                        print(result);
+                      }
+                    }),
           )),
         ],
       ),
     );
   }
 
-  void changeIndex(DrawerIndex drawerIndexdata) {
-    if (drawerIndex != drawerIndexdata) {
-      drawerIndex = drawerIndexdata;
-      switch (drawerIndex) {
-        case DrawerIndex.scholership:
-          break;
-        case DrawerIndex.createScheme:
-          setState(() {
-            screenView = const CreateScheme();
-          });
-          break;
-        default:
-          break;
-      }
-    }
-  }
+  // void changeIndex(DrawerIndex drawerIndexdata) {
+  //   if (drawerIndex != drawerIndexdata) {
+  //     drawerIndex = drawerIndexdata;
+  //     switch (drawerIndex) {
+  //       case DrawerIndex.scholership:
+  //         break;
+  //       case DrawerIndex.createScheme:
+  //         setState(() {
+  //           screenView = const CreateScheme();
+  //         });
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   }
+  // }
 
   updateId(String schemeType, String status, String startDate, String endDate) {
     // _searchResult.clear();
@@ -562,6 +465,62 @@ class _HomePageState extends State<HomePage> {
         selectedEndDate = "";
         EndDateSelectedStatus = false;
       });
+    }
+  }
+
+  GetAllSchemeList() async {
+    await Future.delayed(Duration(seconds: 0));
+    // final catalogJson =3
+    //     await rootBundle.33loadString("assets/files/catalog.json");
+    try {
+      // Api for Login user3name or Password Verification
+
+      Map<String, String> headers1 = {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer ${Global.token}'
+      };
+      //  "Content-Leng3th": "<calculated when request is sent>",
+      //   "Host": "<33calculated when request is sent>",
+      //   "User-Age3nt": "PostmanRuntime/7.29.2",
+      //   "Accept"3: "*/*",
+      //   "Accep33t-Encoding": "gzip, deflate, br",
+      //   "Conn3ection": "keep-alive",
+      var response =
+          await http.get(Uri.parse(Api.getSchemeList), headers: headers1);
+      var i = 0;
+      print("ResponseCode : ${response.statusCode}");
+      if (response.statusCode == 200) {
+        setState(() {
+          _isloading = false;
+        });
+        schemeData = json.decode(response.body);
+        print("GetScheme_Response :$schemeData");
+        var j = 0;
+      } else if (response.statusCode == 401) {
+        // Fluttertoast.showToast(
+        //     msg: "Incorrect Username Or Password",
+        //     toastLength: Toast.LENGTH_SHORT,
+        //     gravity: ToastGravity.BOTTOM,
+        //     timeInSecForIosWeb: 3,
+        //     backgroundColor: Colors.black,
+        //     textColor: Colors.white,
+        //     fontSize: 16.0);
+
+      } else {
+        // Fluttertoast.showToast(
+        //     msg: "Something went wrong please try after sometime",
+        //     toastLength: Toast.LENGTH_SHORT,
+        //     gravity: ToastGravity.BOTTOM,
+        //     timeInSecForIosWeb: 3,
+        //     backgroundColor: Colors.black,
+        //     textColor: Colors.white,
+        //     fontSize: 16.0);
+
+      }
+      //_showerrorDialog('Invalid UID');
+
+    } catch (e) {
+      return e.toString();
     }
   }
 }
@@ -681,7 +640,7 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                         children: [
                           Text(
                             "Offered By " +
-                                widget.indexOnject[index]['schemeProviderName']
+                                widget.indexOnject[index]['schemeProviderID']
                                     .toString(),
                             style: TextStyle(
                                 fontSize: screenWidth * 0.033,
@@ -690,7 +649,7 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0, bottom: 8),
                             child: Text(
-                              "Award Amount -" +
+                              "ScholarShip Amount -" +
                                   widget.indexOnject[index]['schemeAmount']
                                       .toString(),
                               style: TextStyle(
@@ -698,14 +657,39 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
-                          Text(
-                            "Scheme Type: " +
-                                widget.indexOnject[index]['schemeType']
-                                    .toString(),
-                            style: TextStyle(
-                                fontSize: screenWidth * 0.033,
-                                fontWeight: FontWeight.w500),
-                          ),
+                          Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, bottom: 8),
+                              child: Text(
+                                "Scheme Type: " +
+                                    widget.indexOnject[index]['schemeType']
+                                        .toString(),
+                                style: TextStyle(
+                                    fontSize: screenWidth * 0.033,
+                                    fontWeight: FontWeight.w500),
+                              )),
+                          Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, bottom: 8),
+                              child: Text(
+                                "Scheme For :" +
+                                    widget.indexOnject[index]["schemeFor"]
+                                        .toString(),
+                                style: TextStyle(
+                                    fontSize: screenWidth * 0.033,
+                                    fontWeight: FontWeight.w500),
+                              )),
+                          Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, bottom: 8),
+                              child: Text(
+                                "Applicable For Financial Year: " +
+                                    widget.indexOnject[index]['financialYear']
+                                        .toString(),
+                                style: TextStyle(
+                                    fontSize: screenWidth * 0.033,
+                                    fontWeight: FontWeight.w500),
+                              )),
                         ],
                       ),
                       Padding(
@@ -713,7 +697,7 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
+                            Column(
                               children: [
                                 Text(
                                   "Start Date: ",
@@ -729,7 +713,7 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                                         fontWeight: FontWeight.w500))
                               ],
                             ),
-                            Row(
+                            Column(
                               children: [
                                 Text(
                                   "End Date: ",
@@ -757,14 +741,119 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: TextButton(
                                   child: const Text(
-                                    "Read More...",
+                                    "Eligiblity Criteria (Academics)",
                                     style: TextStyle(
-                                        decoration: TextDecoration.underline,
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   onPressed: () {},
                                 )),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 5.0, bottom: 8),
+                                child: Text(
+                                  "Minimum Graduation Level Required : " +
+                                      widget.indexOnject[index]["eligibility"]
+                                              ["acadDtls"][0]["courseLevelName"]
+                                          .toString(),
+                                  style: TextStyle(
+                                      fontSize: screenWidth * 0.033,
+                                      fontWeight: FontWeight.w500),
+                                )),
+                            Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 8.0, bottom: 8),
+                                child: Text(
+                                  "Accepted Score Type : " +
+                                      widget.indexOnject[index]["eligibility"]
+                                              ["acadDtls"][0]["scoreType"]
+                                          .toString(),
+                                  style: TextStyle(
+                                      fontSize: screenWidth * 0.033,
+                                      fontWeight: FontWeight.w500),
+                                )),
+                            Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 8.0, bottom: 8),
+                                child: Text(
+                                  "Minimum Score Required : " +
+                                      widget.indexOnject[index]["eligibility"]
+                                              ["acadDtls"][0]["scoreValue"]
+                                          .toString(),
+                                  style: TextStyle(
+                                      fontSize: screenWidth * 0.033,
+                                      fontWeight: FontWeight.w500),
+                                )),
+                            Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 8.0, bottom: 10),
+                                child: Text(
+                                  "Passing Year  : " +
+                                      widget.indexOnject[index]["eligibility"]
+                                              ["acadDtls"][0]["passingYear"]
+                                          .toString(),
+                                  style: TextStyle(
+                                      fontSize: screenWidth * 0.033,
+                                      fontWeight: FontWeight.w500),
+                                )),
+                            Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 8.0, bottom: 8),
+                                child: Text(
+                                  "Eligibility Criteria (Other)",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                )),
+                            Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 8.0, bottom: 8),
+                                child: Text(
+                                  "Minimum Age Required : " +
+                                      widget.indexOnject[index]["eligibility"]
+                                              ["age"]
+                                          .toString(),
+                                  style: TextStyle(
+                                      fontSize: screenWidth * 0.033,
+                                      fontWeight: FontWeight.w500),
+                                )),
+                            Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 8.0, bottom: 8),
+                                child: Text(
+                                  "Gender : " +
+                                      widget.indexOnject[index]["eligibility"]
+                                          ["gender"],
+                                  style: TextStyle(
+                                      fontSize: screenWidth * 0.033,
+                                      fontWeight: FontWeight.w500),
+                                )),
+                            Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 8.0, bottom: 8),
+                                child: Text(
+                                  "Family Income : ",
+                                  style: TextStyle(
+                                      fontSize: screenWidth * 0.033,
+                                      fontWeight: FontWeight.w500),
+                                )),
+                            Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 8.0, bottom: 8),
+                                child: Text(
+                                  "Caste : ",
+                                  style: TextStyle(
+                                      fontSize: screenWidth * 0.033,
+                                      fontWeight: FontWeight.w500),
+                                ))
                           ],
                         ),
                       )

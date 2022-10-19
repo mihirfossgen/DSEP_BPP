@@ -6,7 +6,7 @@ class Api {
   static const String fetchScheme = _domain + "fetchScheme";
   static const String signUp = _bppUrl + "/api/signup";
 
-  
+  static const String getSchemeList = _bppUrl + "/api/scheme/list";
 
   static const String listAllProviderScheme =
       _bppUrl + "/api/scheme/provider/list";
@@ -14,5 +14,5 @@ class Api {
   static const String createScheme = _bppUrl + '/api/scheme/create';
   // static const String updateScheme =
   //     _bppUrl + '/api/scheme/update/SCM_00420068';
-static const String signin = _bppUrl + "/api/token";
+  static const String signin = _bppUrl + "/api/token";
 }

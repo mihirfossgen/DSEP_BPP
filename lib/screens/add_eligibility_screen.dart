@@ -48,12 +48,11 @@ class _AddEligibilityState extends State<AddEligibility> {
   static TextEditingController scoreType = TextEditingController();
 
   void getUpdatedValueAndSubmitForm(Map<String, dynamic> values) {
-    print(values);
     values['Family Income'] = familyIncome.text;
     values['Gender'] = gender.text;
     values['Course Level Name'] = courseLevelName.text;
     values['Score Type'] = scoreType.text;
-    print(values);
+
     eligibility = Eligibility(
         // caste: values['Caste'],
         // cityOrBlockOrTaluka: values['CityOrBlockOrTaluka'],
@@ -82,8 +81,6 @@ class _AddEligibilityState extends State<AddEligibility> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print(widget.routeFrom);
-    print(widget.data);
     if (widget.routeFrom == "update") {
       routeForUpdate = true;
       spocData = widget.spocdata;
@@ -808,7 +805,6 @@ class _AddEligibilityState extends State<AddEligibility> {
                                 setState(() {
                                   details.remove(details[index]);
                                   courseDetailsIndex = details.length;
-                                  print(courseDetailsIndex);
                                 });
                               },
                               icon: const Icon(
@@ -1049,9 +1045,8 @@ class _BottomsheetState extends State<Bottomsheet> {
   void initState() {
     value = widget.selectedvalue;
 
-    print(value);
     values = widget.values;
-    print(values);
+
     super.initState();
   }
 
@@ -1065,7 +1060,7 @@ class _BottomsheetState extends State<Bottomsheet> {
         products.add(GestureDetector(
           onTap: () {
             value = values[i];
-            print(value);
+
             widget.onchanged(value);
 
             setState(() {});

@@ -94,13 +94,10 @@ class _CreateSchemeState extends State<CreateScheme> {
         _isLoading = false;
 
         response = json.decode(value);
-        print("response in Ui");
-        print(response[0]['schemeProviderName']);
 
         for (var i = 0; i < response.length; i++) {
           schemeProvidername.add(response[i]['schemeProviderName']);
         }
-        print(schemeProvidername);
       });
     });
   }
@@ -138,7 +135,7 @@ class _CreateSchemeState extends State<CreateScheme> {
     DateTime parseDt = DateTime.parse(dt);
     var newFormat = DateFormat("yyyy-MM-dd");
     String updatedDt = newFormat.format(parseDt);
-    print(updatedDt); // 20-
+    // 20-
     return updatedDt;
   }
 
@@ -174,11 +171,6 @@ class _CreateSchemeState extends State<CreateScheme> {
       'Start date': Start_date,
       'End date': End_date
     };
-    print("values stored through fields -------- $values");
-    print(details.spocName);
-    print(details.spocEmail);
-    print(details.scoreValue);
-    print(details.helpdeskNo);
 
     for (var i = 0; i < response.length; i++) {
       if (response[i]['schemeProviderName'] ==
@@ -186,7 +178,6 @@ class _CreateSchemeState extends State<CreateScheme> {
         schemeProviderId = (response[i]['id']);
       }
     }
-    print(schemeProviderId);
 
     var req = {
       "schemeName": Scheme_Name,
@@ -220,7 +211,6 @@ class _CreateSchemeState extends State<CreateScheme> {
     print(jsonEncode(req));
     if (widget.routeFrom == "home") {
       ApiServices().createScheme(req).then((values) {
-        print("value  ------ ${values['status']} ");
         if (values['status'] == "SUCCESS") {
           setState(() {
             _buttonisLoading = false;
@@ -241,7 +231,6 @@ class _CreateSchemeState extends State<CreateScheme> {
           });
           setState(() {});
         } else {
-          print("in else");
           setState(() {
             _buttonisLoading = false;
           });
@@ -258,7 +247,6 @@ class _CreateSchemeState extends State<CreateScheme> {
     }
     if (widget.routeFrom == "update") {
       ApiServices().updateScheme(req, editableData['schemeID']).then((value) {
-        print("value  ------ ${value['status'].runtimeType} ");
         if (value['status'] == true) {
           setState(() {
             _buttonisLoading = false;
@@ -279,7 +267,6 @@ class _CreateSchemeState extends State<CreateScheme> {
           });
           setState(() {});
         } else {
-          print("in else");
           setState(() {
             _buttonisLoading = false;
           });
@@ -762,7 +749,7 @@ class _CreateSchemeState extends State<CreateScheme> {
                                                 : [],
                                           )),
                                 );
-                                print(object['details']);
+
                                 details = object['details'];
                                 appendDetails(details);
                               }),
@@ -1523,9 +1510,7 @@ class _BottomsheetState extends State<Bottomsheet> {
   void initState() {
     value = widget.selectedvalue;
 
-    print(value);
     values = widget.values;
-    print(values);
     super.initState();
   }
 
@@ -1539,7 +1524,7 @@ class _BottomsheetState extends State<Bottomsheet> {
         products.add(GestureDetector(
           onTap: () {
             value = values[i];
-            print(value);
+
             widget.onchanged(value);
 
             setState(() {});
