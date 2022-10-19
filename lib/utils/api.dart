@@ -5,5 +5,14 @@ class Api {
       "https://proteanrc.centralindia.cloudapp.azure.com/dsep-bpp-1";
   static const String fetchScheme = _domain + "fetchScheme";
   static const String signUp = _bppUrl + "/api/signup";
-  static const String signin = _bppUrl + "/api/token";
+
+  
+
+  static const String listAllProviderScheme =
+      _bppUrl + "/api/scheme/provider/list";
+
+  static const String createScheme = _bppUrl + '/api/scheme/create';
+  // static const String updateScheme =
+  //     _bppUrl + '/api/scheme/update/SCM_00420068';
+static const String signin = _bppUrl + "/api/token";
 }

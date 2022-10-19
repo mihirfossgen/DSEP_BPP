@@ -72,7 +72,6 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> onTapped() async {
-    print('Doing Something...');
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const SignInScreen()));
     // Print to console.
