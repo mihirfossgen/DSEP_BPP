@@ -541,6 +541,12 @@ class ReusbaleRow extends StatefulWidget {
 class _ReusbaleRowState extends State<ReusbaleRow> {
   bool publish = false;
 
+  DateTime dateformatter1(int dt) {
+    var date = DateTime.fromMicrosecondsSinceEpoch(dt);
+    DateTime parseDt = DateTime.parse(date.toString());
+    return parseDt;
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -706,7 +712,8 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                    widget.indexOnject[index]['startDate']
+                                    dateformatter1(widget.indexOnject[index]
+                                            ['startDate'])
                                         .toString(),
                                     style: TextStyle(
                                         fontSize: screenWidth * 0.033,
@@ -722,7 +729,8 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                    widget.indexOnject[index]['endDate']
+                                    dateformatter1(widget.indexOnject[index]
+                                            ['endDate'])
                                         .toString(),
                                     style: TextStyle(
                                         fontSize: screenWidth * 0.033,
