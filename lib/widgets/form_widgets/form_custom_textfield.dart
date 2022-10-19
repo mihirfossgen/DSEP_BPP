@@ -20,6 +20,8 @@ class FormCustomTextField extends StatelessWidget {
   late bool large;
   late bool medium;
   late dynamic validator;
+  late String initalValue;
+  late bool readOnly;
 
   FormCustomTextField(
       {Key? key,
@@ -28,6 +30,8 @@ class FormCustomTextField extends StatelessWidget {
       required this.hint,
       this.keyboardType = TextInputType.text,
       this.obscureText = false,
+      this.readOnly = false,
+      required this.initalValue,
       required this.icon,
       this.borderColor = Colors.grey,
       this.cursorColor = Colors.blue,
@@ -47,6 +51,8 @@ class FormCustomTextField extends StatelessWidget {
             order: order,
             keyboardType: keyboardType,
             validator: validator,
+            readOnly: readOnly,
+            initialValue: initalValue,
             decoration: InputDecoration(
               suffixIcon: icon,
               floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -65,6 +71,7 @@ class FormCustomTextField extends StatelessWidget {
               order: order,
               keyboardType: keyboardType,
               validator: validator,
+              readOnly: readOnly,
               suffix: icon,
               padding: const EdgeInsets.only(left: 10),
               decoration: BoxDecoration(
