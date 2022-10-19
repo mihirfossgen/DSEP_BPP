@@ -141,6 +141,15 @@ class Eligibility {
   String? nationality;
   String? religon;
   String? caste;
+  String? courseLevelID;
+  String? courseLevelName;
+  String? courseName;
+  String? scoreType;
+  String? scoreValue;
+  String? spocName;
+  String? spocEmail;
+  String? helpdeskNo;
+  String? passingYear;
 
   Eligibility(
       {this.pastEducation,
@@ -151,7 +160,16 @@ class Eligibility {
       this.cityOrBlockOrTaluka,
       this.nationality,
       this.religon,
-      this.caste});
+      this.caste,
+      this.courseLevelID,
+      this.courseLevelName,
+      this.courseName,
+      this.helpdeskNo,
+      this.scoreType,
+      this.scoreValue,
+      this.spocEmail,
+      this.spocName,
+      this.passingYear});
 
   Eligibility.fromJson(Map<String, dynamic> json) {
     if (json['pastEducation'] != null) {
@@ -168,6 +186,15 @@ class Eligibility {
     nationality = json['nationality'];
     religon = json['religon'];
     caste = json['caste'];
+    courseLevelID = json['courseLevelID'];
+    courseLevelName = json['courseLevelName'];
+    courseName = json['courseName'];
+    scoreType = json['scoreType'];
+    scoreValue = json['scoreValue'];
+    spocName = json['spocName'];
+    spocEmail = json['spocEmail'];
+    helpdeskNo = json['helpDeskNo'];
+    passingYear = json['Passing Year'];
   }
 
   Map<String, dynamic> toJson() {
@@ -183,6 +210,15 @@ class Eligibility {
     data['nationality'] = nationality;
     data['religon'] = religon;
     data['caste'] = caste;
+    data['courseLevelID'] = courseLevelID;
+    data['courseLevelName'] = courseLevelName;
+    data['courseName'] = courseName;
+    data['scoreType'] = scoreType;
+    data['scoreValue'] = scoreValue;
+    data['spocName'] = spocName;
+    data['spocEmail'] = spocEmail;
+    data['helpDeskNo'] = helpdeskNo;
+    data['Passing Year'] = passingYear;
     return data;
   }
 }
