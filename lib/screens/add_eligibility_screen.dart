@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 
+import 'package:dsep_bpp/utils/colors_widget.dart';
 import 'package:dsep_bpp/widgets/text_widget.dart';
 
 import 'package:flutter/material.dart';
@@ -40,18 +41,37 @@ class _AddEligibilityState extends State<AddEligibility> {
   Eligibility eligibility = Eligibility();
   int _index = 0;
   var data;
+  int academicCount = 1;
   var spocData;
   bool routeForUpdate = false;
+  List<TextEditingController> courseLevelName = [];
+  List<TextEditingController> courseName = [];
+  List<TextEditingController> scoreValue = [];
+  List<TextEditingController> passingYear = [];
   static TextEditingController gender = TextEditingController();
   static TextEditingController familyIncome = TextEditingController();
-  static TextEditingController courseLevelName = TextEditingController();
-  static TextEditingController scoreType = TextEditingController();
+  // static TextEditingController courseLevelName = TextEditingController();
+  List<TextEditingController> scoreType = [];
 
   void getUpdatedValueAndSubmitForm(Map<String, dynamic> values) {
     values['Family Income'] = familyIncome.text;
     values['Gender'] = gender.text;
-    values['Course Level Name'] = courseLevelName.text;
-    values['Score Type'] = scoreType.text;
+
+    List list = [];
+    // values['Course Level Name'] = courseLevelName.text;
+    // values['Score Type'] = scoreType.text;
+    for (var i = 0; i < academicCount; i++) {
+      print(i);
+      list.add({
+        "courseLevelName": courseLevelName[i].text,
+        "courseName": courseName[i].text,
+        "scoreType": scoreType[i].text,
+        "scoreValue": scoreValue[i].text,
+        "passingYear": passingYear[i].text
+      });
+    }
+    print(list);
+    values['academicDetails'] = list;
 
     eligibility = Eligibility(
         // caste: values['Caste'],
@@ -59,11 +79,12 @@ class _AddEligibilityState extends State<AddEligibility> {
         // district: values['District'],
         familyIncome: values['Family Income'],
         gender: values['Gender'],
+        academicDetails: values['academicDetails'],
         courseLevelID: values['Course Level ID'],
-        courseLevelName: values['Course Level Name'],
+        // courseLevelName: values['Course Level Name'],
         courseName: values['Course Name'],
         scoreType: values['Score Type'],
-        scoreValue: values['Min Score Value'],
+        // scoreValue: values['Min Score Value'],
         spocName: values['Spoc Name'],
         spocEmail: values['Spoc Email'],
         helpdeskNo: values['Help Desk No'],
@@ -85,10 +106,40 @@ class _AddEligibilityState extends State<AddEligibility> {
       routeForUpdate = true;
       spocData = widget.spocdata;
       data = widget.data;
-      gender.text = data['gender'];
-      familyIncome.text = data['familyIncome'] ?? "";
-      courseLevelName.text = data['acadDtls'][0]['courseLevelName'];
-      scoreType.text = data['acadDtls'][0]['scoreType'];
+      gender.text = data['gender'] ?? "NA";
+      familyIncome.text = data['familyIncome'] ?? 'Not Mandatory';
+      // courseLevelName.add(TextEditingController());
+      // courseLevelName.text = data['acadDtls'][0]['courseLevelName'];
+      // scoreType.text = data['acadDtls'][0]['scoreType'];
+      List a = data['acadDtls'];
+      academicCount = a.length;
+    }
+
+    initalData();
+  }
+
+  void initalData() {
+    if (widget.routeFrom == "update") {
+      for (var i = 0; i < academicCount; i++) {
+        courseLevelName.add(TextEditingController(
+            text: data['acadDtls']?[i]['courseLevelName'] ?? ""));
+        courseName.add(TextEditingController(
+            text: data['acadDtls']?[i]['courseName'] ?? ""));
+        scoreType.add(TextEditingController(
+            text: data['acadDtls']?[i]['scoreType'] ?? ""));
+        scoreValue.add(TextEditingController(
+            text: data['acadDtls']?[i]['scoreValue'] ?? ""));
+        passingYear.add(TextEditingController(
+            text: data['acadDtls']?[i]['passingYear'] ?? ""));
+      }
+    } else {
+      for (var i = 0; i < academicCount; i++) {
+        courseLevelName.add(TextEditingController());
+        courseName.add(TextEditingController());
+        scoreType.add(TextEditingController());
+        scoreValue.add(TextEditingController());
+        passingYear.add(TextEditingController());
+      }
     }
   }
 
@@ -124,11 +175,7 @@ class _AddEligibilityState extends State<AddEligibility> {
                                   //Global.gender.text = gender.text;
                                   setState(() {});
                                 }),
-                                values: const [
-                                  'Male',
-                                  'Female',
-                                  'Other',
-                                ],
+                                values: const ['Male', 'Female', 'Other', 'NA'],
                                 selectedvalue: gender.text,
                               );
                             });
@@ -183,6 +230,7 @@ class _AddEligibilityState extends State<AddEligibility> {
                                   'less than 100000',
                                   '100000 to 500000',
                                   'more than 500000',
+                                  'Not Mandatory'
                                 ],
                                 selectedvalue: familyIncome.text,
                               );
@@ -210,6 +258,17 @@ class _AddEligibilityState extends State<AddEligibility> {
                     ))
               ],
             ),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: 15.0, right: 10.0, top: 20.0),
+                child: TextWidget(
+                  text: 'Academic Details',
+                  size: 25,
+                  weight: FontWeight.bold,
+                ),
+              ),
+            ),
             Column(
               children: [
                 // Padding(
@@ -219,259 +278,74 @@ class _AddEligibilityState extends State<AddEligibility> {
                 // const SizedBox(
                 //   height: 5,
                 // ),
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //     Padding(
+                //       padding: const EdgeInsets.only(
+                //           left: 15.0, right: 10.0, top: 15.0),
+                //       child: FormCaptionText('Course Level ID', 0),
+                //     ),
+                //     Padding(
+                //       padding: const EdgeInsets.only(
+                //           left: 10.0, right: 10.0, top: 10.0),
+                //       child: FormCustomTextField(
+                //           initalValue: routeForUpdate
+                //               ? data['acadDtls'][0]['courseLevelID']
+                //               : "",
+                //           name: 'Course Level ID',
+                //           order: 1,
+                //           hint: '',
+                //           validator: FormeValidates.notEmpty(errorText: ''),
+                //           keyboardType: TextInputType.name,
+                //           cornerRadius: 15.0,
+                //           cursorColor: Colors.blue,
+                //           borderColor: Colors.grey,
+                //           icon: const ValidationIcon()),
+                //     )
+                //   ],
+                // ),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 10.0, top: 15.0),
-                      child: FormCaptionText('Course Level ID', 0),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10.0, right: 10.0, top: 10.0),
-                      child: FormCustomTextField(
-                          initalValue: routeForUpdate
-                              ? data['acadDtls'][0]['courseLevelID']
-                              : "",
-                          name: 'Course Level ID',
-                          order: 1,
-                          hint: '',
-                          validator: FormeValidates.notEmpty(errorText: ''),
-                          keyboardType: TextInputType.name,
-                          cornerRadius: 15.0,
-                          cursorColor: Colors.blue,
-                          borderColor: Colors.grey,
-                          icon: const ValidationIcon()),
-                    )
-                  ],
+                  children: acedemicDeatils(),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 10.0, top: 15.0),
-                      child: FormCaptionText('Course Level Name', 0),
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.only(
-                            left: 10.0, right: 10.0, top: 10.0),
-                        child: InkWell(
-                          onTap: () {
-                            showModalBottomSheet<dynamic>(
-                                isScrollControlled: true,
-                                context: context,
-                                backgroundColor: Colors.transparent,
-                                builder: (BuildContext bc) {
-                                  return Bottomsheet(
-                                    onchanged: ((value) {
-                                      courseLevelName.text = value;
-                                      //Global.courseLevelName.text = value;
-                                      setState(() {});
-                                    }),
-                                    values: const [
-                                      'Higher Secondary',
-                                      'Diploma',
-                                      'Graduate',
-                                      'Post Graduate'
-                                    ],
-                                    selectedvalue: courseLevelName.text,
-                                  );
-                                });
-                          },
-                          child: AbsorbPointer(
-                              child: TextFormField(
-                            controller: courseLevelName,
-                            decoration: InputDecoration(
-                              suffixIcon: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Icon(Icons.arrow_drop_down,
-                                    color: Colors.black),
-                              ),
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.never,
-                              suffixIconConstraints:
-                                  const BoxConstraints.tightFor(),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(
-                                      color: Colors.blue, width: 0.0)),
-                              //hintText: hint,
-                            ),
-                          )),
-                        ))
-                  ],
+                const SizedBox(
+                  height: 10,
                 ),
+                InkWell(
+                  onTap: () {
+                    academicCount++;
+                    print(academicCount);
+                    initalData();
+                    setState(() {});
+                  },
+                  child: AbsorbPointer(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.add, color: primaryColor, size: 20),
+                        TextWidget(
+                          text: "Press to add extra academic details",
+                          color: primaryColor,
+                          size: 15,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                // ElevatedButton(
+                //     onPressed: (() {
+                //       // this.initState();
 
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 10.0, top: 15.0),
-                      child: FormCaptionText('Course Name', 0),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10.0, right: 10.0, top: 10.0),
-                      child: FormCustomTextField(
-                          initalValue: routeForUpdate
-                              ? data['acadDtls'][0]['courseName']
-                              : "",
-                          name: 'Course Name',
-                          order: 4,
-                          hint: '',
-                          validator: FormeValidates.notEmpty(errorText: ''),
-                          keyboardType: TextInputType.name,
-                          cornerRadius: 15.0,
-                          cursorColor: Colors.blue,
-                          borderColor: Colors.grey,
-                          icon: const ValidationIcon()),
-                    )
-                  ],
-                ),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 10.0, top: 15.0),
-                      child: FormCaptionText('Score Type', 0),
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.only(
-                            left: 10.0, right: 10.0, top: 10.0),
-                        child: InkWell(
-                          onTap: () {
-                            showModalBottomSheet<dynamic>(
-                                isScrollControlled: true,
-                                context: context,
-                                backgroundColor: Colors.transparent,
-                                builder: (BuildContext bc) {
-                                  return Bottomsheet(
-                                    onchanged: ((value) {
-                                      scoreType.text = value;
-                                      // Global.scoreType.text = value;
-                                      setState(() {});
-                                    }),
-                                    values: const [
-                                      'Percentage',
-                                      'CGPA',
-                                    ],
-                                    selectedvalue: scoreType.text,
-                                  );
-                                });
-                          },
-                          child: AbsorbPointer(
-                              child: TextFormField(
-                            controller: scoreType,
-                            decoration: InputDecoration(
-                              suffixIcon: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Icon(Icons.arrow_drop_down,
-                                    color: Colors.black),
-                              ),
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.never,
-                              suffixIconConstraints:
-                                  const BoxConstraints.tightFor(),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(
-                                      color: Colors.blue, width: 0.0)),
-                              //hintText: hint,
-                            ),
-                          )),
-                        ))
-
-                    // Padding(
-                    //   padding: const EdgeInsets.only(
-                    //       left: 10.0, right: 10.0, top: 10.0),
-                    //   child: FormCustomDropDown(
-                    //     name: 'Score Type',
-                    //     order: 8,
-                    //     hint: routeForUpdate
-                    //         ? data['acadDtls'][0]['scoreType']
-                    //         : "",
-                    //     validator: FormeValidates.notEmpty(errorText: ''),
-                    //     items: const [
-                    //       'Percentage',
-                    //       'CGPA',
-                    //     ],
-                    //   ),
-                    // )
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 10.0, top: 15.0),
-                      child: FormCaptionText('Score Value', 0),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10.0, right: 10.0, top: 15.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: FormCustomTextField(
-                                initalValue: routeForUpdate
-                                    ? data['acadDtls'][0]['scoreValue']
-                                    : "",
-                                name: 'Min Score Value',
-                                order: 9,
-                                hint: 'Min',
-                                validator:
-                                    FormeValidates.notEmpty(errorText: ''),
-                                keyboardType: TextInputType.name,
-                                cornerRadius: 15.0,
-                                cursorColor: Colors.blue,
-                                borderColor: Colors.grey,
-                                icon: const ValidationIcon()),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 10.0, top: 15.0),
-                      child: FormCaptionText('Passing Year', 0),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10.0, right: 10.0, top: 10.0),
-                      child: FormCustomTextField(
-                          initalValue: routeForUpdate
-                              ? data['acadDtls'][0]['passingYear']
-                              : "",
-                          name: 'Passing Year',
-                          order: 4,
-                          hint: '',
-                          validator: FormeValidates.notEmpty(errorText: ''),
-                          keyboardType: TextInputType.name,
-                          cornerRadius: 15.0,
-                          cursorColor: Colors.blue,
-                          borderColor: Colors.grey,
-                          icon: const ValidationIcon()),
-                    )
-                  ],
-                ),
+                //     }),
+                //     child: const Icon(Icons.add)),
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 15.0, right: 10.0, top: 20.0),
+                    padding:
+                        EdgeInsets.only(left: 15.0, right: 10.0, top: 20.0),
                     child: TextWidget(
-                      text: 'Extra Data',
+                      text: 'Additional Information',
                       size: 25,
                       weight: FontWeight.bold,
                     ),
@@ -627,6 +501,145 @@ class _AddEligibilityState extends State<AddEligibility> {
       children.add(widget);
     });
     return children;
+  }
+
+  List<Widget> acedemicDeatils() {
+    List<Widget> _list = [];
+    for (var i = 0; i < academicCount; i++) {
+      _list.add(Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _title('Course Level Name'),
+          Padding(
+              padding:
+                  const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+              child: InkWell(
+                onTap: () {
+                  showModalBottomSheet<dynamic>(
+                      isScrollControlled: true,
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      builder: (BuildContext bc) {
+                        return Bottomsheet(
+                          onchanged: ((value) {
+                            courseLevelName[i].text = value;
+                            //Global.courseLevelName.text = value;
+                            setState(() {});
+                          }),
+                          values: const [
+                            'Higher Secondary',
+                            'Diploma',
+                            'Graduate',
+                            'Post Graduate'
+                          ],
+                          selectedvalue: courseLevelName[i].text,
+                        );
+                      });
+                },
+                child: AbsorbPointer(
+                    child: TextFormField(
+                  controller: courseLevelName[i],
+                  decoration: InputDecoration(
+                    suffixIcon: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(Icons.arrow_drop_down, color: Colors.black),
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    suffixIconConstraints: const BoxConstraints.tightFor(),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide:
+                            const BorderSide(color: Colors.blue, width: 0.0)),
+                    //hintText: hint,
+                  ),
+                )),
+              )),
+          _title('Course Name'),
+          _textFields(courseName[i]),
+          _title('Score Type'),
+          Padding(
+              padding:
+                  const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+              child: InkWell(
+                onTap: () {
+                  showModalBottomSheet<dynamic>(
+                      isScrollControlled: true,
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      builder: (BuildContext bc) {
+                        return Bottomsheet(
+                          onchanged: ((value) {
+                            scoreType[i].text = value;
+                            // Global.scoreType.text = value;
+                            setState(() {});
+                          }),
+                          values: const [
+                            'Percentage',
+                            'CGPA',
+                          ],
+                          selectedvalue: scoreType[i].text,
+                        );
+                      });
+                },
+                child: AbsorbPointer(
+                    child: TextFormField(
+                  controller: scoreType[i],
+                  decoration: InputDecoration(
+                    suffixIcon: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(Icons.arrow_drop_down, color: Colors.black),
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    suffixIconConstraints: const BoxConstraints.tightFor(),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide:
+                            const BorderSide(color: Colors.blue, width: 0.0)),
+                    //hintText: hint,
+                  ),
+                )),
+              )),
+          _title('Score value'),
+          _textFields(scoreValue[i]),
+          _title('Passing Year'),
+          _textFields(passingYear[i])
+        ],
+      ));
+    }
+    return _list;
+  }
+
+  Widget _title(String text) {
+    return Padding(
+        padding: const EdgeInsets.only(left: 15.0, right: 10.0, top: 15.0),
+        child: TextWidget(
+          alignment: TextAlign.left,
+          text: text,
+          size: 15,
+          color: Colors.black,
+          weight: FontWeight.w600,
+        ));
+  }
+
+  Widget _textFields(TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          // suffixIcon: const Padding(
+          //   padding: EdgeInsets.all(8.0),
+          //   child: Icon(Icons.arrow_drop_down, color: Colors.black),
+          // ),
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          // suffixIconConstraints: const BoxConstraints.tightFor(),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: const BorderSide(color: Colors.blue, width: 0.0)),
+          //hintText: hint,
+        ),
+      ),
+    );
   }
 
   InputBorder? getEnabledBorder(FormeFieldValidation? validation,
@@ -1167,5 +1180,19 @@ class _BottomsheetState extends State<Bottomsheet> {
         ],
       ),
     );
+  }
+}
+
+class AcademicDetails extends StatefulWidget {
+  const AcademicDetails({Key? key}) : super(key: key);
+
+  @override
+  State<AcademicDetails> createState() => _AcademicDetailsState();
+}
+
+class _AcademicDetailsState extends State<AcademicDetails> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

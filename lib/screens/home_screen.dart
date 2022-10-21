@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Theme.of(context).primaryColor,
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CreateScheme(
+                    builder: (context) => CreateSchemeScreen(
                           routeFrom: "home",
                         )));
               },
@@ -377,7 +377,7 @@ class _HomePageState extends State<HomePage> {
 
                         if (result == CustomButton.positiveButton) {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => CreateScheme(
+                              builder: (context) => CreateSchemeScreen(
                                     routeFrom: "update",
                                     data: schemeData[index],
                                   )));

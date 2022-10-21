@@ -27,17 +27,17 @@ import './../widgets/widget_utl.dart';
 import '../widgets/responsive_ui.dart';
 import 'package:intl/intl.dart';
 
-class CreateScheme extends StatefulWidget {
+class CreateSchemeScreen extends StatefulWidget {
   final String routeFrom;
   var data;
-  CreateScheme({Key? key, required this.routeFrom, this.data})
+  CreateSchemeScreen({Key? key, required this.routeFrom, this.data})
       : super(key: key);
 
   @override
   _CreateSchemeState createState() => _CreateSchemeState();
 }
 
-class _CreateSchemeState extends State<CreateScheme> {
+class _CreateSchemeState extends State<CreateSchemeScreen> {
   late double _height;
   late double _width;
   late double _pixelRatio;
@@ -71,6 +71,7 @@ class _CreateSchemeState extends State<CreateScheme> {
   TextEditingController schemeProviderIdController = TextEditingController();
   TextEditingController schemeTypeController = TextEditingController();
   TextEditingController schemeForController = TextEditingController();
+  TextEditingController financialYearController = TextEditingController();
 
   @override
   void initState() {
@@ -85,6 +86,7 @@ class _CreateSchemeState extends State<CreateScheme> {
       schemeProviderIdController.text = editableData['schemeProviderID'];
       schemeTypeController.text = editableData['schemeType'];
       schemeForController.text = editableData['schemeFor'];
+      financialYearController.text = editableData['financialYear'];
     }
   }
 
@@ -96,7 +98,9 @@ class _CreateSchemeState extends State<CreateScheme> {
         response = json.decode(value);
 
         for (var i = 0; i < response.length; i++) {
-          schemeProvidername.add(response[i]['schemeProviderName']);
+          if (response[i]['active']) {
+            schemeProvidername.add(response[i]['schemeProviderName']);
+          }
         }
       });
     });
@@ -144,7 +148,8 @@ class _CreateSchemeState extends State<CreateScheme> {
     values["Scheme Provider ID"] = schemeProviderIdController.text;
     values["Scheme Type"] = schemeTypeController.text;
     values["Scheme For"] = schemeForController.text;
-    String Scheme_ID = values["Scheme ID"];
+    values['Financial Year'] = financialYearController.text;
+    //String Scheme_ID = values["Scheme ID"];
     String Scheme_Name = values["Scheme Name"] as String;
     String Scheme_Description = values["Scheme Description"] as String;
     String Scheme_Provider_ID = values["Scheme Provider ID"] as String;
@@ -158,7 +163,7 @@ class _CreateSchemeState extends State<CreateScheme> {
     String Start_date = values["Start date"].toString();
     String End_date = values["End date"].toString();
     schemeValue = {
-      'Scheme ID': Scheme_ID,
+      //'Scheme ID': Scheme_ID,
       'Scheme Name': Scheme_Name,
       'Scheme Description': Scheme_Description,
       'Scheme Provider ID': Scheme_Provider_ID,
@@ -190,16 +195,7 @@ class _CreateSchemeState extends State<CreateScheme> {
       "startDate": dateformatter(Start_date),
       "endDate": dateformatter(End_date),
       "eligibility": {
-        "acadDtls": [
-          {
-            "courseLevelID": details.courseLevelID,
-            "courseLevelName": details.courseLevelName,
-            "courseName": details.courseName,
-            "scoreType": details.scoreType,
-            "scoreValue": details.scoreValue,
-            "passingYear": "2021"
-          }
-        ],
+        "acadDtls": details.academicDetails,
         "gender": details.gender,
         "familyIncome": details.familyIncome
       },
@@ -296,33 +292,36 @@ class _CreateSchemeState extends State<CreateScheme> {
         elevation: 12,
         child: Column(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 15.0, right: 10.0, top: 15.0),
-                  child: FormCaptionText('Scheme ID', 0),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
-                  child: FormCustomTextField(
-                      name: 'Scheme ID',
-                      order: 1,
-                      hint: '',
-                      initalValue:
-                          routeFromUpdate ? editableData['schemeID'] : "",
-                      validator: FormeValidates.notEmpty(
-                          errorText: 'Scheme ID is required'),
-                      keyboardType: TextInputType.name,
-                      cornerRadius: 15.0,
-                      cursorColor: Colors.blue,
-                      borderColor: Colors.grey,
-                      icon: const ValidationIcon()),
-                )
-              ],
-            ),
+            this.widget.routeFrom == "home"
+                ? Container()
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15.0, right: 10.0, top: 15.0),
+                        child: FormCaptionText('Scheme ID', 0),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 10.0, right: 10.0, top: 10.0),
+                        child: FormCustomTextField(
+                            name: 'Scheme ID',
+                            order: 1,
+                            hint: '',
+                            readOnly: true,
+                            initalValue:
+                                routeFromUpdate ? editableData['schemeID'] : "",
+                            validator: FormeValidates.notEmpty(
+                                errorText: 'Scheme ID is required'),
+                            keyboardType: TextInputType.name,
+                            cornerRadius: 15.0,
+                            cursorColor: Colors.blue,
+                            borderColor: Colors.grey,
+                            icon: const ValidationIcon()),
+                      )
+                    ],
+                  ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -558,21 +557,75 @@ class _CreateSchemeState extends State<CreateScheme> {
                   child: FormCaptionText('Financial Year', 0),
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
-                  child: FormCustomTextField(
-                      name: 'Financial Year',
-                      order: 4,
-                      hint: '',
-                      initalValue:
-                          routeFromUpdate ? editableData['financialYear'] : "",
-                      validator: FormeValidates.notEmpty(errorText: ''),
-                      keyboardType: TextInputType.name,
-                      cornerRadius: 15.0,
-                      cursorColor: Colors.blue,
-                      borderColor: Colors.grey,
-                      icon: const ValidationIcon()),
-                )
+                    padding: const EdgeInsets.only(
+                        left: 10.0, right: 10.0, top: 10.0),
+                    child: InkWell(
+                      onTap: () {
+                        showModalBottomSheet<dynamic>(
+                            isScrollControlled: true,
+                            context: context,
+                            backgroundColor: Colors.transparent,
+                            builder: (BuildContext bc) {
+                              return Bottomsheet(
+                                onchanged: ((value) {
+                                  financialYearController.text = value;
+                                  setState(() {});
+                                }),
+                                values: const [
+                                  '2021-2022',
+                                  '2022-2023',
+                                  '2023-2024'
+                                ],
+                                selectedvalue: financialYearController.text,
+                              );
+                            });
+                      },
+                      child: AbsorbPointer(
+                          child: TextFormField(
+                        controller: financialYearController,
+                        decoration: InputDecoration(
+                          suffixIcon: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(Icons.arrow_drop_down,
+                                color: Colors.black),
+                          ),
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          suffixIconConstraints:
+                              const BoxConstraints.tightFor(),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                  color: Colors.blue, width: 0.0)),
+                          //hintText: hint,
+                        ),
+                      )),
+                    )
+
+                    // FormCustomDropDown(
+                    //     name: 'Scheme Type',
+                    //     order: 2,
+                    //     hint: routeFromUpdate ? editableData['schemeType'] : "",
+                    //     validator: FormeValidates.notEmpty(
+                    //         errorText: 'Scheme Type is required'),
+                    //     items: const ['Scholarship', 'Grant']),
+                    )
+
+                // Padding(
+                //   padding:
+                //       const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+                //   child: FormCustomTextField(
+                //       name: 'Financial Year',
+                //       order: 4,
+                //       hint: '',
+                //       initalValue:
+                //           routeFromUpdate ? editableData['financialYear'] : "",
+                //       validator: FormeValidates.notEmpty(errorText: ''),
+                //       keyboardType: TextInputType.name,
+                //       cornerRadius: 15.0,
+                //       cursorColor: Colors.blue,
+                //       borderColor: Colors.grey,
+                //       icon: const ValidationIcon()),
+                // )
               ],
             ),
             Column(
@@ -749,9 +802,10 @@ class _CreateSchemeState extends State<CreateScheme> {
                                                 : [],
                                           )),
                                 );
-
-                                details = object['details'];
-                                appendDetails(details);
+                                if (object['details'] != null) {
+                                  details = object['details'];
+                                  appendDetails(details);
+                                }
                               }),
                               child: Padding(
                                 padding: const EdgeInsets.all(10),
@@ -798,247 +852,318 @@ class _CreateSchemeState extends State<CreateScheme> {
           });
         }
       }
-      final Widget widget = Center(
-        child: StickyHeader(
-          header: Container(
-            height: 50.0,
-            color: Colors.blueGrey[700],
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            alignment: Alignment.centerLeft,
-            child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const <Widget>[
-                  Text(
-                    'Eligibility Criteria',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ]),
-          ),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              //add qualification details
-              // _isPastEducationAdded
-              //     ? Padding(
-              //         padding: const EdgeInsets.all(8.0),
-              //         child: SizedBox(
-              //           height: 340,
-              //           width: _width / 0.05,
-              //           child: ListView(
-              //               scrollDirection: Axis.horizontal,
-              //               children: <Widget>[
-              //                 for (var item
-              //                     in eligibilityDetails.pastEducation ?? [])
-              //                   Container(
-              //                       child: appendQualificaionDetails(item)),
-              //               ]),
-              //         ),
-              //       )
-              //     : const SizedBox(),
-              WidgetUtl.getVerticalSpace(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12),
-                    child: TitleText(
-                      ('Gender:'),
-                      0,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5),
-                    child: ValueText(
-                      (eligibilityDetails.gender ?? ''),
-                      0,
-                    ),
-                  )
-                ],
+      List<Widget> academicDetails = [];
+      for (var i = 0; i < details.academicDetails!.length; i++) {
+        academicDetails.add(Column(children: [
+          // WidgetUtl.getVerticalSpace(),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.start,
+          //   children: <Widget>[
+          //     Padding(
+          //       padding: const EdgeInsets.only(left: 12),
+          //       child: TitleText(
+          //         ('Course Level ID:'),
+          //         0,
+          //       ),
+          //     ),
+          //     Padding(
+          //       padding: const EdgeInsets.only(left: 5, right: 5),
+          //       child: ValueText(
+          //         (eligibilityDetails.courseLevelID ?? ''),
+          //         0,
+          //       ),
+          //     )
+          //   ],
+          // ),
+          WidgetUtl.getVerticalSpace(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: TitleText(
+                  ('Course Level Name:'),
+                  0,
+                ),
               ),
-              WidgetUtl.getVerticalSpace(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12),
-                    child: TitleText(
-                      ('Family Income:'),
-                      0,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5),
-                    child: ValueText(
-                      (eligibilityDetails.familyIncome ?? ''),
-                      0,
-                    ),
-                  )
-                ],
-              ),
-              WidgetUtl.getVerticalSpace(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12),
-                    child: TitleText(
-                      ('Course Level ID:'),
-                      0,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5),
-                    child: ValueText(
-                      (eligibilityDetails.courseLevelID ?? ''),
-                      0,
-                    ),
-                  )
-                ],
-              ),
-              WidgetUtl.getVerticalSpace(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12),
-                    child: TitleText(
-                      ('Course Level Name:'),
-                      0,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5),
-                    child: ValueText(
-                      (eligibilityDetails.courseLevelName ?? ''),
-                      0,
-                    ),
-                  )
-                ],
-              ),
-              WidgetUtl.getVerticalSpace(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12),
-                    child: TitleText(
-                      ('Course Name:'),
-                      0,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5),
-                    child: ValueText(
-                      (eligibilityDetails.courseName ?? ''),
-                      0,
-                    ),
-                  )
-                ],
-              ),
-              WidgetUtl.getVerticalSpace(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12),
-                    child: TitleText(
-                      ('Score Type:'),
-                      0,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5),
-                    child: ValueText(
-                      (eligibilityDetails.scoreType ?? ''),
-                      0,
-                    ),
-                  )
-                ],
-              ),
-              WidgetUtl.getVerticalSpace(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12),
-                    child: TitleText(
-                      ('Score Value:'),
-                      0,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5),
-                    child: ValueText(
-                      (eligibilityDetails.scoreValue ?? ''),
-                      0,
-                    ),
-                  )
-                ],
-              ),
-              WidgetUtl.getVerticalSpace(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12),
-                    child: TitleText(
-                      ('Spoc Name:'),
-                      0,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5),
-                    child: ValueText(
-                      (eligibilityDetails.spocName ?? ''),
-                      0,
-                    ),
-                  )
-                ],
-              ),
-              WidgetUtl.getVerticalSpace(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12),
-                    child: TitleText(
-                      ('Spoc Email:'),
-                      0,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5),
-                    child: ValueText(
-                      (eligibilityDetails.spocEmail ?? ''),
-                      0,
-                    ),
-                  )
-                ],
-              ),
-              WidgetUtl.getVerticalSpace(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12),
-                    child: TitleText(
-                      ('Help Desk No:'),
-                      0,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5),
-                    child: ValueText(
-                      (eligibilityDetails.helpdeskNo ?? ''),
-                      0,
-                    ),
-                  )
-                ],
+              Padding(
+                padding: const EdgeInsets.only(left: 5, right: 5),
+                child: ValueText(
+                  (details.academicDetails![i]['courseLevelName'] ?? ''),
+                  0,
+                ),
               )
             ],
           ),
+          WidgetUtl.getVerticalSpace(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: TitleText(
+                  ('Course Name:'),
+                  0,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 5, right: 5),
+                child: ValueText(
+                  (details.academicDetails![i]['courseName'] ?? ''),
+                  0,
+                ),
+              )
+            ],
+          ),
+          WidgetUtl.getVerticalSpace(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: TitleText(
+                  ('Score Type:'),
+                  0,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 5, right: 5),
+                child: ValueText(
+                  (details.academicDetails![i]['scoreType'] ?? ''),
+                  0,
+                ),
+              )
+            ],
+          ),
+          WidgetUtl.getVerticalSpace(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: TitleText(
+                  ('Score Value:'),
+                  0,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 5, right: 5),
+                child: ValueText(
+                  (details.academicDetails![i]['scoreValue'] ?? ''),
+                  0,
+                ),
+              )
+            ],
+          ),
+          WidgetUtl.getVerticalSpace(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: TitleText(
+                  ('Passing year:'),
+                  0,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 5, right: 5),
+                child: ValueText(
+                  (details.academicDetails![i]['passingYear'] ?? ''),
+                  0,
+                ),
+              )
+            ],
+          ),
+          WidgetUtl.getVerticalSpace(),
+        ]));
+      }
+      final Widget widget = Center(
+        child: Column(
+          children: [
+            StickyHeader(
+              header: Container(
+                height: 50.0,
+                color: Colors.blueGrey[700],
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                alignment: Alignment.centerLeft,
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const <Widget>[
+                      Text(
+                        'Eligibility Criteria',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ]),
+              ),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  //add qualification details
+                  // _isPastEducationAdded
+                  //     ? Padding(
+                  //         padding: const EdgeInsets.all(8.0),
+                  //         child: SizedBox(
+                  //           height: 340,
+                  //           width: _width / 0.05,
+                  //           child: ListView(
+                  //               scrollDirection: Axis.horizontal,
+                  //               children: <Widget>[
+                  //                 for (var item
+                  //                     in eligibilityDetails.pastEducation ?? [])
+                  //                   Container(
+                  //                       child: appendQualificaionDetails(item)),
+                  //               ]),
+                  //         ),
+                  //       )
+                  //     : const SizedBox(),
+                  WidgetUtl.getVerticalSpace(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12),
+                        child: TitleText(
+                          ('Gender:'),
+                          0,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5, right: 5),
+                        child: ValueText(
+                          (eligibilityDetails.gender ?? ''),
+                          0,
+                        ),
+                      )
+                    ],
+                  ),
+                  WidgetUtl.getVerticalSpace(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12),
+                        child: TitleText(
+                          ('Family Income:'),
+                          0,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5, right: 5),
+                        child: ValueText(
+                          (eligibilityDetails.familyIncome ?? ''),
+                          0,
+                        ),
+                      )
+                    ],
+                  ),
+                  WidgetUtl.getVerticalSpace(),
+                ],
+              ),
+            ),
+            StickyHeader(
+                header: Container(
+                  height: 50.0,
+                  color: Colors.green[800],
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const <Widget>[
+                        Text(
+                          'Academic Details',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ]),
+                ),
+                content: Column(
+                  children: academicDetails,
+                )),
+            StickyHeader(
+              header: Container(
+                height: 50.0,
+                color: Colors.yellow[800],
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                alignment: Alignment.centerLeft,
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const <Widget>[
+                      Text(
+                        'Additional Information',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ]),
+              ),
+              content: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      WidgetUtl.getVerticalSpace(),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12),
+                        child: TitleText(
+                          ('Spoc Name:'),
+                          0,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5, right: 5),
+                        child: ValueText(
+                          (eligibilityDetails.spocName ?? ''),
+                          0,
+                        ),
+                      )
+                    ],
+                  ),
+                  WidgetUtl.getVerticalSpace(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12),
+                        child: TitleText(
+                          ('Spoc Email:'),
+                          0,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5, right: 5),
+                        child: ValueText(
+                          (eligibilityDetails.spocEmail ?? ''),
+                          0,
+                        ),
+                      )
+                    ],
+                  ),
+                  WidgetUtl.getVerticalSpace(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12),
+                        child: TitleText(
+                          ('Help Desk No:'),
+                          0,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5, right: 5),
+                        child: ValueText(
+                          (eligibilityDetails.helpdeskNo ?? ''),
+                          0,
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
         ),
       );
       setState(() {

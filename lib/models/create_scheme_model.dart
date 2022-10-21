@@ -82,6 +82,7 @@ class CreateScheme {
     data['schemeProviderDescription'] = schemeProviderDescription;
     data['schemeType'] = schemeType;
     data['financialYear'] = financialYear;
+
     if (schemeFor != null) {
       data['schemeFor'] = schemeFor!.map((v) => v.toJson()).toList();
     }
@@ -149,6 +150,7 @@ class Eligibility {
   String? spocName;
   String? spocEmail;
   String? helpdeskNo;
+  List? academicDetails;
   String? passingYear;
 
   Eligibility(
@@ -161,6 +163,7 @@ class Eligibility {
       this.nationality,
       this.religon,
       this.caste,
+      this.academicDetails,
       this.courseLevelID,
       this.courseLevelName,
       this.courseName,
@@ -178,6 +181,7 @@ class Eligibility {
         pastEducation!.add(PastEducation.fromJson(v));
       });
     }
+    academicDetails = json['academicDetails'];
     gender = json['gender'];
     familyIncome = json['familyIncome'];
     state = json['state'];
@@ -219,6 +223,7 @@ class Eligibility {
     data['spocEmail'] = spocEmail;
     data['helpDeskNo'] = helpdeskNo;
     data['Passing Year'] = passingYear;
+    data['academicDetails'] = academicDetails;
     return data;
   }
 }

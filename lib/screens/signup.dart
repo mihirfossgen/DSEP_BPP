@@ -94,10 +94,10 @@ class _SignUpState extends State<SignUpPage> {
                   height: 10,
                 ),
                 textfieldDesign("Password", _passWord, Icons.person, context),
-                const SizedBox(
-                  height: 10,
-                ),
-                textfieldDesign("Location", _location, Icons.person, context),
+                // const SizedBox(
+                //   height: 10,
+                // ),
+                // textfieldDesign("Location", _location, Icons.person, context),
                 const SizedBox(
                   height: 20,
                 ),
@@ -120,9 +120,10 @@ class _SignUpState extends State<SignUpPage> {
               color: Theme.of(context).primaryColor,
               onPressed: () {
                 if (_userIdController.text.isNotEmpty &&
-                    _name.text.isNotEmpty &&
-                    _passWord.text.isNotEmpty &&
-                    _location.text.isNotEmpty) {
+                        _name.text.isNotEmpty &&
+                        _passWord.text.isNotEmpty
+                    //_location.text.isNotEmpty
+                    ) {
                   if (!loader) {
                     setState(() {
                       loader = true;
