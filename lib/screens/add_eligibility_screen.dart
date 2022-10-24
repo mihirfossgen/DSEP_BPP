@@ -61,7 +61,6 @@ class _AddEligibilityState extends State<AddEligibility> {
     // values['Course Level Name'] = courseLevelName.text;
     // values['Score Type'] = scoreType.text;
     for (var i = 0; i < academicCount; i++) {
-      print(i);
       list.add({
         "courseLevelName": courseLevelName[i].text,
         "courseName": courseName[i].text,
@@ -70,7 +69,6 @@ class _AddEligibilityState extends State<AddEligibility> {
         "passingYear": passingYear[i].text
       });
     }
-    print(list);
     values['academicDetails'] = list;
 
     eligibility = Eligibility(
@@ -98,6 +96,8 @@ class _AddEligibilityState extends State<AddEligibility> {
     Navigator.pop(context, {'details': eligibility});
   }
 
+  List a = [];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -111,7 +111,7 @@ class _AddEligibilityState extends State<AddEligibility> {
       // courseLevelName.add(TextEditingController());
       // courseLevelName.text = data['acadDtls'][0]['courseLevelName'];
       // scoreType.text = data['acadDtls'][0]['scoreType'];
-      List a = data['acadDtls'];
+      a = data['acadDtls'];
       academicCount = a.length;
     }
 
@@ -119,7 +119,13 @@ class _AddEligibilityState extends State<AddEligibility> {
   }
 
   void initalData() {
-    if (widget.routeFrom == "update") {
+    if (academicCount != a.length) {
+      courseLevelName.add(TextEditingController());
+      courseName.add(TextEditingController());
+      scoreType.add(TextEditingController());
+      scoreValue.add(TextEditingController());
+      passingYear.add(TextEditingController());
+    } else if (widget.routeFrom == "update") {
       for (var i = 0; i < academicCount; i++) {
         courseLevelName.add(TextEditingController(
             text: data['acadDtls']?[i]['courseLevelName'] ?? ""));
@@ -131,14 +137,6 @@ class _AddEligibilityState extends State<AddEligibility> {
             text: data['acadDtls']?[i]['scoreValue'] ?? ""));
         passingYear.add(TextEditingController(
             text: data['acadDtls']?[i]['passingYear'] ?? ""));
-      }
-    } else {
-      for (var i = 0; i < academicCount; i++) {
-        courseLevelName.add(TextEditingController());
-        courseName.add(TextEditingController());
-        scoreType.add(TextEditingController());
-        scoreValue.add(TextEditingController());
-        passingYear.add(TextEditingController());
       }
     }
   }
@@ -314,7 +312,6 @@ class _AddEligibilityState extends State<AddEligibility> {
                 InkWell(
                   onTap: () {
                     academicCount++;
-                    print(academicCount);
                     initalData();
                     setState(() {});
                   },

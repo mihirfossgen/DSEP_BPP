@@ -1104,6 +1104,7 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       WidgetUtl.getVerticalSpace(),
+                      WidgetUtl.getVerticalSpace(),
                       Padding(
                         padding: const EdgeInsets.only(left: 12),
                         child: TitleText(
