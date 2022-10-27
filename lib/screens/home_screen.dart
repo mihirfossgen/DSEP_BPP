@@ -22,7 +22,6 @@ import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dsep_bpp/provides/ApiServices.dart';
 
-
 class HomePage extends StatefulWidget {
   int? value;
   //var schemeData;
@@ -356,7 +355,7 @@ class _HomePageState extends State<HomePage> {
                               showAsLinksOnWindows: true),
                         );
                         print(result);
-                            if (result == CustomButton.positiveButton) {
+                        if (result == CustomButton.positiveButton) {
                           var data = {};
                           ApiServices()
                               .publishScheme(
@@ -364,9 +363,7 @@ class _HomePageState extends State<HomePage> {
                               .then((value) {
                             if (value["status"] == true) {
                               schemeData[index]["published"] = true;
-                              setState(() {
-                                
-                              });
+                              setState(() {});
                               Fluttertoast.showToast(
                                   msg: "Scheme Published SuccessFully",
                                   toastLength: Toast.LENGTH_SHORT,
@@ -399,7 +396,7 @@ class _HomePageState extends State<HomePage> {
                               showAsLinksOnWindows: true),
                         );
                         print(result);
-                           if (result == CustomButton.positiveButton) {
+                        if (result == CustomButton.positiveButton) {
                           var data = {};
                           ApiServices()
                               .unpublishScheme(
@@ -407,9 +404,7 @@ class _HomePageState extends State<HomePage> {
                               .then((value) {
                             if (value["status"] == true) {
                               schemeData[index]["published"] = false;
-                              setState(() {
-                                
-                              });
+                              setState(() {});
                               Fluttertoast.showToast(
                                   msg: "Scheme unPublished SuccessFully",
                                   toastLength: Toast.LENGTH_SHORT,
@@ -431,7 +426,6 @@ class _HomePageState extends State<HomePage> {
                             }
                           });
                         }
-                        
                       } else if (selectedOption == "Edit") {
                         var result = await FlutterPlatformAlert.showCustomAlert(
                           windowTitle: 'Do you want to Edit this?',
@@ -462,17 +456,14 @@ class _HomePageState extends State<HomePage> {
                               showAsLinksOnWindows: true),
                         );
                         print(result);
-                                if (result == CustomButton.positiveButton) {
+                        if (result == CustomButton.positiveButton) {
                           var data = {};
                           ApiServices()
-                              .Delete(
-                                  data, schemeData[index]["schemeID"])
+                              .Delete(data, schemeData[index]["schemeID"])
                               .then((value) {
                             if (value["status"] == true) {
                               schemeData[index]["deleted"] = true;
-                              setState(() {
-                                
-                              });
+                              setState(() {});
                               Fluttertoast.showToast(
                                   msg: "Scheme Deleted SuccessFully",
                                   toastLength: Toast.LENGTH_SHORT,
@@ -656,310 +647,320 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
         itemCount: widget.indexOnject.length,
         itemBuilder: (context2, index) {
           return Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child:widget.indexOnject[index]['deleted'] ? Card() : Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                  side: const BorderSide(
-                    color: primaryColor,
-                    width: 2,
-                  ),
-                ),
-                color: Colors.white,
-                elevation: 10,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(left: 18.0, top: 18, bottom: 18),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            padding: widget.indexOnject[index]['deleted']
+                ? const EdgeInsets.only(top: 0)
+                : const EdgeInsets.only(top: 10),
+            child: widget.indexOnject[index]['deleted']
+                ? Container(
+                    height: 0,
+                  )
+                : Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      side: const BorderSide(
+                        color: primaryColor,
+                        width: 2,
+                      ),
+                    ),
+                    color: Colors.white,
+                    elevation: 10,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 18.0, top: 18, bottom: 18),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Image.asset(
-                            'assets/images/default_profile.jpeg',
-                            width: screenWidth * 0.13,
-                            height: screenHeight * 0.07,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Image.asset(
+                                'assets/images/default_profile.jpeg',
+                                width: screenWidth * 0.13,
+                                height: screenHeight * 0.07,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: SizedBox(
+                                  width: screenWidth * 0.55,
+                                  child: Text(
+                                    widget.indexOnject[index]['schemeName']
+                                        .toString(),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        fontSize: screenWidth * 0.034,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                              PopupMenuButton(
+                                itemBuilder: (ctx) => [
+                                  widget.indexOnject[index]['published']
+                                      ? PopupMenuItem(
+                                          child: const Text(
+                                            "UnPublish",
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                          onTap: () {},
+                                        )
+                                      : PopupMenuItem(
+                                          child: const Text(
+                                            "Publish",
+                                            style:
+                                                TextStyle(color: Colors.green),
+                                          ),
+                                          onTap: () {},
+                                        ),
+                                  PopupMenuItem(
+                                    child: const Text("Edit"),
+                                    onTap: () {
+                                      widget.optionTypeSelect("Edit", index);
+                                    },
+                                  ),
+                                  PopupMenuItem(
+                                    child: const Text("Delete"),
+                                    onTap: () {
+                                      widget.optionTypeSelect("Delete", index);
+                                    },
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Offered By " +
+                                    widget.indexOnject[index]
+                                            ['schemeProviderID']
+                                        .toString(),
+                                style: TextStyle(
+                                    fontSize: screenWidth * 0.033,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 8.0, bottom: 8),
+                                child: Text(
+                                  "ScholarShip Amount -" +
+                                      widget.indexOnject[index]['schemeAmount']
+                                          .toString(),
+                                  style: TextStyle(
+                                      fontSize: screenWidth * 0.033,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 8.0, bottom: 8),
+                                  child: Text(
+                                    "Scheme Type: " +
+                                        widget.indexOnject[index]['schemeType']
+                                            .toString(),
+                                    style: TextStyle(
+                                        fontSize: screenWidth * 0.033,
+                                        fontWeight: FontWeight.w500),
+                                  )),
+                              Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 8.0, bottom: 8),
+                                  child: Text(
+                                    "Scheme For :" +
+                                        widget.indexOnject[index]["schemeFor"]
+                                            .toString(),
+                                    style: TextStyle(
+                                        fontSize: screenWidth * 0.033,
+                                        fontWeight: FontWeight.w500),
+                                  )),
+                              Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 8.0, bottom: 8),
+                                  child: Text(
+                                    "Applicable For Financial Year: " +
+                                        widget.indexOnject[index]
+                                                ['financialYear']
+                                            .toString(),
+                                    style: TextStyle(
+                                        fontSize: screenWidth * 0.033,
+                                        fontWeight: FontWeight.w500),
+                                  )),
+                            ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: SizedBox(
-                              width: screenWidth * 0.55,
-                              child: Text(
-                                widget.indexOnject[index]['schemeName']
-                                    .toString(),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                style: TextStyle(
-                                    fontSize: screenWidth * 0.034,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                            padding: const EdgeInsets.only(top: 8.0, right: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  children: [
+                                    Text(
+                                      "Start Date: ",
+                                      style: TextStyle(
+                                          fontSize: screenWidth * 0.033,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                        dateformatter1(widget.indexOnject[index]
+                                                ['startDate'])
+                                            .toString(),
+                                        style: TextStyle(
+                                            fontSize: screenWidth * 0.033,
+                                            fontWeight: FontWeight.w500))
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Text(
+                                      "End Date: ",
+                                      style: TextStyle(
+                                          fontSize: screenWidth * 0.033,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                        dateformatter1(widget.indexOnject[index]
+                                                ['endDate'])
+                                            .toString(),
+                                        style: TextStyle(
+                                            fontSize: screenWidth * 0.033,
+                                            fontWeight: FontWeight.w500))
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                          PopupMenuButton(
-                            itemBuilder: (ctx) => [
-                               widget.indexOnject[index]['published']
-                                  ? PopupMenuItem(
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: TextButton(
                                       child: const Text(
-                                        "UnPublish",
-                                        style: TextStyle(color: Colors.red),
+                                        "Eligiblity Criteria (Academics)",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                      onTap: () {
-                                       
-                                      },
-                                    )
-                                  : PopupMenuItem(
-                                      child: const Text(
-                                        "Publish",
-                                        style: TextStyle(color: Colors.green),
-                                      ),
-                                      onTap: () {
-                                        
-                                      },
-                                    ),
-                              PopupMenuItem(
-                                child: const Text("Edit"),
-                                onTap: () {
-                                  widget.optionTypeSelect("Edit", index);
-                                },
-                              ),
-                              PopupMenuItem(
-                                child: const Text("Delete"),
-                                onTap: () {
-                                  widget.optionTypeSelect("Delete", index);
-                                },
-                              ),
-                            ],
+                                      onPressed: () {},
+                                    )),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 5.0, bottom: 8),
+                                    child: Text(
+                                      "Minimum Graduation Level Required : " +
+                                          widget.indexOnject[index]
+                                                  ["eligibility"]["acadDtls"][0]
+                                                  ["courseLevelName"]
+                                              .toString(),
+                                      style: TextStyle(
+                                          fontSize: screenWidth * 0.033,
+                                          fontWeight: FontWeight.w500),
+                                    )),
+                                Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, bottom: 8),
+                                    child: Text(
+                                      "Accepted Score Type : " +
+                                          widget.indexOnject[index]
+                                                  ["eligibility"]["acadDtls"][0]
+                                                  ["scoreType"]
+                                              .toString(),
+                                      style: TextStyle(
+                                          fontSize: screenWidth * 0.033,
+                                          fontWeight: FontWeight.w500),
+                                    )),
+                                Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, bottom: 8),
+                                    child: Text(
+                                      "Minimum Score Required : " +
+                                          widget.indexOnject[index]
+                                                  ["eligibility"]["acadDtls"][0]
+                                                  ["scoreValue"]
+                                              .toString(),
+                                      style: TextStyle(
+                                          fontSize: screenWidth * 0.033,
+                                          fontWeight: FontWeight.w500),
+                                    )),
+                                Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, bottom: 10),
+                                    child: Text(
+                                      "Passing Year  : " +
+                                          widget.indexOnject[index]
+                                                  ["eligibility"]["acadDtls"][0]
+                                                  ["passingYear"]
+                                              .toString(),
+                                      style: TextStyle(
+                                          fontSize: screenWidth * 0.033,
+                                          fontWeight: FontWeight.w500),
+                                    )),
+                                Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, bottom: 8),
+                                    child: Text(
+                                      "Eligibility Criteria (Other)",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                                Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, bottom: 8),
+                                    child: Text(
+                                      "Minimum Age Required : " +
+                                          widget.indexOnject[index]
+                                                  ["eligibility"]["age"]
+                                              .toString(),
+                                      style: TextStyle(
+                                          fontSize: screenWidth * 0.033,
+                                          fontWeight: FontWeight.w500),
+                                    )),
+                                Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, bottom: 8),
+                                    child: Text(
+                                      "Gender : " +
+                                          widget.indexOnject[index]
+                                              ["eligibility"]["gender"],
+                                      style: TextStyle(
+                                          fontSize: screenWidth * 0.033,
+                                          fontWeight: FontWeight.w500),
+                                    )),
+                                Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, bottom: 8),
+                                    child: Text(
+                                      "Family Income : ",
+                                      style: TextStyle(
+                                          fontSize: screenWidth * 0.033,
+                                          fontWeight: FontWeight.w500),
+                                    )),
+                                Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, bottom: 8),
+                                    child: Text(
+                                      "Caste : ",
+                                      style: TextStyle(
+                                          fontSize: screenWidth * 0.033,
+                                          fontWeight: FontWeight.w500),
+                                    ))
+                              ],
+                            ),
                           )
                         ],
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Offered By " +
-                                widget.indexOnject[index]['schemeProviderID']
-                                    .toString(),
-                            style: TextStyle(
-                                fontSize: screenWidth * 0.033,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                            child: Text(
-                              "ScholarShip Amount -" +
-                                  widget.indexOnject[index]['schemeAmount']
-                                      .toString(),
-                              style: TextStyle(
-                                  fontSize: screenWidth * 0.033,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 8.0, bottom: 8),
-                              child: Text(
-                                "Scheme Type: " +
-                                    widget.indexOnject[index]['schemeType']
-                                        .toString(),
-                                style: TextStyle(
-                                    fontSize: screenWidth * 0.033,
-                                    fontWeight: FontWeight.w500),
-                              )),
-                          Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 8.0, bottom: 8),
-                              child: Text(
-                                "Scheme For :" +
-                                    widget.indexOnject[index]["schemeFor"]
-                                        .toString(),
-                                style: TextStyle(
-                                    fontSize: screenWidth * 0.033,
-                                    fontWeight: FontWeight.w500),
-                              )),
-                          Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 8.0, bottom: 8),
-                              child: Text(
-                                "Applicable For Financial Year: " +
-                                    widget.indexOnject[index]['financialYear']
-                                        .toString(),
-                                style: TextStyle(
-                                    fontSize: screenWidth * 0.033,
-                                    fontWeight: FontWeight.w500),
-                              )),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0, right: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              children: [
-                                Text(
-                                  "Start Date: ",
-                                  style: TextStyle(
-                                      fontSize: screenWidth * 0.033,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                    dateformatter1(widget.indexOnject[index]
-                                            ['startDate'])
-                                        .toString(),
-                                    style: TextStyle(
-                                        fontSize: screenWidth * 0.033,
-                                        fontWeight: FontWeight.w500))
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  "End Date: ",
-                                  style: TextStyle(
-                                      fontSize: screenWidth * 0.033,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                    dateformatter1(widget.indexOnject[index]
-                                            ['endDate'])
-                                        .toString(),
-                                    style: TextStyle(
-                                        fontSize: screenWidth * 0.033,
-                                        fontWeight: FontWeight.w500))
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: TextButton(
-                                  child: const Text(
-                                    "Eligiblity Criteria (Academics)",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  onPressed: () {},
-                                )),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 5.0, bottom: 8),
-                                child: Text(
-                                  "Minimum Graduation Level Required : " +
-                                      widget.indexOnject[index]["eligibility"]
-                                              ["acadDtls"][0]["courseLevelName"]
-                                          .toString(),
-                                  style: TextStyle(
-                                      fontSize: screenWidth * 0.033,
-                                      fontWeight: FontWeight.w500),
-                                )),
-                            Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8.0, bottom: 8),
-                                child: Text(
-                                  "Accepted Score Type : " +
-                                      widget.indexOnject[index]["eligibility"]
-                                              ["acadDtls"][0]["scoreType"]
-                                          .toString(),
-                                  style: TextStyle(
-                                      fontSize: screenWidth * 0.033,
-                                      fontWeight: FontWeight.w500),
-                                )),
-                            Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8.0, bottom: 8),
-                                child: Text(
-                                  "Minimum Score Required : " +
-                                      widget.indexOnject[index]["eligibility"]
-                                              ["acadDtls"][0]["scoreValue"]
-                                          .toString(),
-                                  style: TextStyle(
-                                      fontSize: screenWidth * 0.033,
-                                      fontWeight: FontWeight.w500),
-                                )),
-                            Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8.0, bottom: 10),
-                                child: Text(
-                                  "Passing Year  : " +
-                                      widget.indexOnject[index]["eligibility"]
-                                              ["acadDtls"][0]["passingYear"]
-                                          .toString(),
-                                  style: TextStyle(
-                                      fontSize: screenWidth * 0.033,
-                                      fontWeight: FontWeight.w500),
-                                )),
-                            Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8.0, bottom: 8),
-                                child: Text(
-                                  "Eligibility Criteria (Other)",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                            Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8.0, bottom: 8),
-                                child: Text(
-                                  "Minimum Age Required : " +
-                                      widget.indexOnject[index]["eligibility"]
-                                              ["age"]
-                                          .toString(),
-                                  style: TextStyle(
-                                      fontSize: screenWidth * 0.033,
-                                      fontWeight: FontWeight.w500),
-                                )),
-                            Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8.0, bottom: 8),
-                                child: Text(
-                                  "Gender : " +
-                                      widget.indexOnject[index]["eligibility"]
-                                          ["gender"],
-                                  style: TextStyle(
-                                      fontSize: screenWidth * 0.033,
-                                      fontWeight: FontWeight.w500),
-                                )),
-                            Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8.0, bottom: 8),
-                                child: Text(
-                                  "Family Income : ",
-                                  style: TextStyle(
-                                      fontSize: screenWidth * 0.033,
-                                      fontWeight: FontWeight.w500),
-                                )),
-                            Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8.0, bottom: 8),
-                                child: Text(
-                                  "Caste : ",
-                                  style: TextStyle(
-                                      fontSize: screenWidth * 0.033,
-                                      fontWeight: FontWeight.w500),
-                                ))
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )),
+                    )),
           );
         });
   }

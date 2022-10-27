@@ -102,6 +102,7 @@ class _SignInScreenState extends State<SignInScreen> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: PlatformScaffold(
+        backgroundColor: whiteColor,
         body: SafeArea(
           top: true,
           bottom: true,
@@ -154,7 +155,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(bottom: _bottom),
                     child: const Text(
-                      'Powerd by Protean ID',
+                      'Powerd by Protean',
                       style:
                           TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                     ),
@@ -241,6 +242,7 @@ class _SignInScreenState extends State<SignInScreen> {
           : PlatformElevatedButton(
               color: Theme.of(context).primaryColor,
               onPressed: () {
+                FocusNode().unfocus();
                 if (emailController.text.isNotEmpty &&
                     passwordController.text.isNotEmpty) {
                   //_submit(uidController.text);
@@ -378,6 +380,8 @@ class _SignInScreenState extends State<SignInScreen> {
           );
         });
       } else if (response.statusCode == 401) {
+        _isloading = false;
+        setState(() {});
         Fluttertoast.showToast(
             msg: "Incorrect Username Or Password",
             toastLength: Toast.LENGTH_SHORT,
@@ -387,6 +391,8 @@ class _SignInScreenState extends State<SignInScreen> {
             textColor: Colors.white,
             fontSize: 16.0);
       } else {
+        _isloading = false;
+        setState(() {});
         Fluttertoast.showToast(
             msg: "Something went wrong please try after sometime",
             toastLength: Toast.LENGTH_SHORT,
