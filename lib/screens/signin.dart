@@ -242,7 +242,7 @@ class _SignInScreenState extends State<SignInScreen> {
           : PlatformElevatedButton(
               color: Theme.of(context).primaryColor,
               onPressed: () {
-                FocusNode().unfocus();
+                FocusScope.of(context).unfocus();
                 if (emailController.text.isNotEmpty &&
                     passwordController.text.isNotEmpty) {
                   //_submit(uidController.text);

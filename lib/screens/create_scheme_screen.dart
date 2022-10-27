@@ -389,6 +389,7 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
                         left: 10.0, right: 10.0, top: 10.0),
                     child: InkWell(
                       onTap: () {
+                        FocusScope.of(context).unfocus();
                         showModalBottomSheet<dynamic>(
                             isScrollControlled: true,
                             context: context,
@@ -502,6 +503,7 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
                         left: 10.0, right: 10.0, top: 10.0),
                     child: InkWell(
                       onTap: () {
+                        FocusScope.of(context).unfocus();
                         showModalBottomSheet<dynamic>(
                             isScrollControlled: true,
                             context: context,
@@ -561,6 +563,7 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
                         left: 10.0, right: 10.0, top: 10.0),
                     child: InkWell(
                       onTap: () {
+                        FocusScope.of(context).unfocus();
                         showModalBottomSheet<dynamic>(
                             isScrollControlled: true,
                             context: context,
@@ -641,6 +644,7 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
                         left: 10.0, right: 10.0, top: 10.0),
                     child: InkWell(
                       onTap: () {
+                        FocusScope.of(context).unfocus();
                         showModalBottomSheet<dynamic>(
                             isScrollControlled: true,
                             context: context,

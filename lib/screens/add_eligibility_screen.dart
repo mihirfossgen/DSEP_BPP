@@ -162,6 +162,7 @@ class _AddEligibilityState extends State<AddEligibility> {
                         left: 10.0, right: 10.0, top: 10.0),
                     child: InkWell(
                       onTap: () {
+                        FocusScope.of(context).unfocus();
                         showModalBottomSheet<dynamic>(
                             isScrollControlled: true,
                             context: context,
@@ -213,6 +214,7 @@ class _AddEligibilityState extends State<AddEligibility> {
                         left: 10.0, right: 10.0, top: 10.0),
                     child: InkWell(
                       onTap: () {
+                        FocusScope.of(context).unfocus();
                         showModalBottomSheet<dynamic>(
                             isScrollControlled: true,
                             context: context,
@@ -512,6 +514,7 @@ class _AddEligibilityState extends State<AddEligibility> {
                   const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
               child: InkWell(
                 onTap: () {
+                  FocusScope.of(context).unfocus();
                   showModalBottomSheet<dynamic>(
                       isScrollControlled: true,
                       context: context,
@@ -559,6 +562,7 @@ class _AddEligibilityState extends State<AddEligibility> {
                   const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
               child: InkWell(
                 onTap: () {
+                  FocusScope.of(context).unfocus();
                   showModalBottomSheet<dynamic>(
                       isScrollControlled: true,
                       context: context,
