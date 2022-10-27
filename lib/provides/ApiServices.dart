@@ -65,6 +65,21 @@ class ApiServices {
     }
   }
 
+  Future publishScheme(data, schemeId) {
+    String url = Api.publish + schemeId;
+    return postData(Uri.parse(url), data);
+  }
+
+  Future unpublishScheme(data, schemeId) {
+    String url = Api.unpublish + schemeId;
+    return postData(Uri.parse(url), data);
+  }
+
+  Future Delete(data, schemeId) {
+    String url = Api.delete + schemeId;
+    return postData(Uri.parse(url), data);
+  }
+
   static Future<dynamic> postData(url, body) async {
     if (kDebugMode) print(url);
     if (kDebugMode) print(body);

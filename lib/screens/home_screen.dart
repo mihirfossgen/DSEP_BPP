@@ -19,6 +19,9 @@ import '../widgets/custom_drawer/drawer_user_controller.dart';
 import '../widgets/custom_drawer/home_drawer.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:dsep_bpp/provides/ApiServices.dart';
+
 
 class HomePage extends StatefulWidget {
   int? value;
@@ -353,6 +356,38 @@ class _HomePageState extends State<HomePage> {
                               showAsLinksOnWindows: true),
                         );
                         print(result);
+                            if (result == CustomButton.positiveButton) {
+                          var data = {};
+                          ApiServices()
+                              .publishScheme(
+                                  data, schemeData[index]["schemeID"])
+                              .then((value) {
+                            if (value["status"] == true) {
+                              schemeData[index]["published"] = true;
+                              setState(() {
+                                
+                              });
+                              Fluttertoast.showToast(
+                                  msg: "Scheme Published SuccessFully",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 3,
+                                  backgroundColor: Colors.black,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg:
+                                      "Failed To Publish Scheme...Try After Sometime",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 3,
+                                  backgroundColor: Colors.black,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            }
+                          });
+                        }
                       } else if (selectedOption == "UnPublish") {
                         var result = await FlutterPlatformAlert.showCustomAlert(
                           windowTitle: 'Do you want to UnPublish this?',
@@ -364,6 +399,39 @@ class _HomePageState extends State<HomePage> {
                               showAsLinksOnWindows: true),
                         );
                         print(result);
+                           if (result == CustomButton.positiveButton) {
+                          var data = {};
+                          ApiServices()
+                              .unpublishScheme(
+                                  data, schemeData[index]["schemeID"])
+                              .then((value) {
+                            if (value["status"] == true) {
+                              schemeData[index]["published"] = false;
+                              setState(() {
+                                
+                              });
+                              Fluttertoast.showToast(
+                                  msg: "Scheme unPublished SuccessFully",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 3,
+                                  backgroundColor: Colors.black,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg:
+                                      "Failed To Publish Scheme...Try After Sometime",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 3,
+                                  backgroundColor: Colors.black,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            }
+                          });
+                        }
+                        
                       } else if (selectedOption == "Edit") {
                         var result = await FlutterPlatformAlert.showCustomAlert(
                           windowTitle: 'Do you want to Edit this?',
@@ -394,6 +462,38 @@ class _HomePageState extends State<HomePage> {
                               showAsLinksOnWindows: true),
                         );
                         print(result);
+                                if (result == CustomButton.positiveButton) {
+                          var data = {};
+                          ApiServices()
+                              .Delete(
+                                  data, schemeData[index]["schemeID"])
+                              .then((value) {
+                            if (value["status"] == true) {
+                              schemeData[index]["deleted"] = true;
+                              setState(() {
+                                
+                              });
+                              Fluttertoast.showToast(
+                                  msg: "Scheme Deleted SuccessFully",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 3,
+                                  backgroundColor: Colors.black,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg:
+                                      "Failed To Delete Scheme...Try After Sometime",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 3,
+                                  backgroundColor: Colors.black,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            }
+                          });
+                        }
                       }
                     }),
           )),
@@ -557,7 +657,7 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
         itemBuilder: (context2, index) {
           return Padding(
             padding: const EdgeInsets.only(top: 10),
-            child: Card(
+            child:widget.indexOnject[index]['deleted'] ? Card() : Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                   side: const BorderSide(
@@ -598,18 +698,14 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                           ),
                           PopupMenuButton(
                             itemBuilder: (ctx) => [
-                              publish
+                               widget.indexOnject[index]['published']
                                   ? PopupMenuItem(
                                       child: const Text(
                                         "UnPublish",
                                         style: TextStyle(color: Colors.red),
                                       ),
                                       onTap: () {
-                                        widget.optionTypeSelect(
-                                            "UnPublish", index);
-                                        setState(() {
-                                          publish = false;
-                                        });
+                                       
                                       },
                                     )
                                   : PopupMenuItem(
@@ -618,11 +714,7 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                                         style: TextStyle(color: Colors.green),
                                       ),
                                       onTap: () {
-                                        widget.optionTypeSelect(
-                                            "Publish", index);
-                                        setState(() {
-                                          publish = true;
-                                        });
+                                        
                                       },
                                     ),
                               PopupMenuItem(

@@ -15,4 +15,7 @@ class Api {
   // static const String updateScheme =
   //     _bppUrl + '/api/scheme/update/SCM_00420068';
   static const String signin = _bppUrl + "/api/token";
+  static const String publish = _bppUrl + "/api/scheme/publish/";
+  static const String unpublish = _bppUrl + "/api/scheme/unpublish/";
+  static const String delete = _bppUrl + "/api/scheme/delete/";
 }
