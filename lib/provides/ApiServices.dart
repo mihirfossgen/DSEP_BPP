@@ -50,15 +50,12 @@ class ApiServices {
       };
       var resp = await http.get(Uri.parse(Api.listAllProviderScheme),
           headers: userheader);
-      print(resp.statusCode);
-      print(resp.body.toString());
       if (resp.statusCode == 200) {
         return resp.body;
       } else {
         return falseResp;
       }
     } on TimeoutException catch (e) {
-      if (kDebugMode) print(e);
       return timeoutrespon;
     } catch (e) {
       if (kDebugMode) print("error ---- $e");
@@ -81,8 +78,6 @@ class ApiServices {
   }
 
   static Future<dynamic> postData(url, body) async {
-    if (kDebugMode) print(url);
-    if (kDebugMode) print(body);
     Map<String, String> userheader = {
       "Content-Type": "application/json",
       "Authorization": authroziation
@@ -90,7 +85,6 @@ class ApiServices {
     try {
       var resp =
           await http.post(url, body: json.encode(body), headers: userheader);
-      if (kDebugMode) print(resp.body);
 
       if (resp.statusCode == 201) {
         return json.decode(resp.body);
@@ -108,7 +102,6 @@ class ApiServices {
         return falseResp;
       }
     } on TimeoutException catch (e) {
-      if (kDebugMode) print(e);
       return timeoutrespon;
     } catch (e) {
       if (kDebugMode) print("error ---- $e");

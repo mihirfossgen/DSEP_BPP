@@ -242,7 +242,6 @@ class _SignInScreenState extends State<SignInScreen> {
           : PlatformElevatedButton(
               color: Theme.of(context).primaryColor,
               onPressed: () {
-                FocusScope.of(context).unfocus();
                 if (emailController.text.isNotEmpty &&
                     passwordController.text.isNotEmpty) {
                   //_submit(uidController.text);
@@ -254,7 +253,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   };
                   _isloading = true;
                   setState(() {});
+                  Global.username = emailController.text;
                   validate(Data);
+                  FocusScope.of(context).unfocus();
                 } else {
                   Fluttertoast.showToast(
                       msg: "Enter Username and password...",

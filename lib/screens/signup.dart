@@ -1,6 +1,7 @@
 import 'package:dsep_bpp/provides/ApiServices.dart';
 import 'package:dsep_bpp/screens/tabbar.dart';
 import 'package:dsep_bpp/utils/colors_widget.dart';
+import 'package:dsep_bpp/utils/globals.dart';
 import 'package:dsep_bpp/widgets/custom_loader.dart';
 import 'package:dsep_bpp/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
@@ -129,6 +130,7 @@ class _SignUpState extends State<SignUpPage> {
                       loader = true;
                     });
                   }
+                  Global.username = _name.text;
                   var req = {
                     "userId": _userIdController.text,
                     "password": _passWord.text,
