@@ -2,7 +2,7 @@ import 'dart:io' show Platform;
 
 import 'package:dsep_bpp/utils/colors_widget.dart';
 import 'package:dsep_bpp/widgets/text_widget.dart';
-
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:forme/forme.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -113,6 +113,9 @@ class _AddEligibilityState extends State<AddEligibility> {
       // scoreType.text = data['acadDtls'][0]['scoreType'];
       a = data['acadDtls'];
       academicCount = a.length;
+    } else {
+      gender.text = "";
+      familyIncome.text = "";
     }
 
     initalData();
@@ -505,105 +508,136 @@ class _AddEligibilityState extends State<AddEligibility> {
   List<Widget> acedemicDeatils() {
     List<Widget> _list = [];
     for (var i = 0; i < academicCount; i++) {
-      _list.add(Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      _list.add(Stack(
         children: [
-          _title('Course Level Name'),
-          Padding(
-              padding:
-                  const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
-              child: InkWell(
-                onTap: () {
-                  FocusScope.of(context).unfocus();
-                  showModalBottomSheet<dynamic>(
-                      isScrollControlled: true,
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      builder: (BuildContext bc) {
-                        return Bottomsheet(
-                          onchanged: ((value) {
-                            courseLevelName[i].text = value;
-                            //Global.courseLevelName.text = value;
-                            setState(() {});
-                          }),
-                          values: const [
-                            'Higher Secondary',
-                            'Diploma',
-                            'Graduate',
-                            'Post Graduate'
-                          ],
-                          selectedvalue: courseLevelName[i].text,
-                        );
+          i == 0
+              ? Container()
+              : Positioned(
+                  height: 40,
+                  right: 10,
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        courseLevelName.remove(TextEditingController());
+                        courseName.remove(TextEditingController());
+                        scoreType.remove(TextEditingController());
+                        scoreValue.remove(TextEditingController());
+                        passingYear.remove(TextEditingController());
+                        academicCount--;
                       });
-                },
-                child: AbsorbPointer(
-                    child: TextFormField(
-                  controller: courseLevelName[i],
-                  decoration: InputDecoration(
-                    suffixIcon: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(Icons.arrow_drop_down, color: Colors.black),
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      child: SvgPicture.asset('assets/images/delete.svg',
+                          height: 30,
+                          fit: BoxFit.fill,
+                          color: greyColor.shade400),
                     ),
-                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                    suffixIconConstraints: const BoxConstraints.tightFor(),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide:
-                            const BorderSide(color: Colors.blue, width: 0.0)),
-                    //hintText: hint,
                   ),
-                )),
-              )),
-          _title('Course Name'),
-          _textFields(courseName[i]),
-          _title('Score Type'),
-          Padding(
-              padding:
-                  const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
-              child: InkWell(
-                onTap: () {
-                  FocusScope.of(context).unfocus();
-                  showModalBottomSheet<dynamic>(
-                      isScrollControlled: true,
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      builder: (BuildContext bc) {
-                        return Bottomsheet(
-                          onchanged: ((value) {
-                            scoreType[i].text = value;
-                            // Global.scoreType.text = value;
-                            setState(() {});
-                          }),
-                          values: const [
-                            'Percentage',
-                            'CGPA',
-                          ],
-                          selectedvalue: scoreType[i].text,
-                        );
-                      });
-                },
-                child: AbsorbPointer(
-                    child: TextFormField(
-                  controller: scoreType[i],
-                  decoration: InputDecoration(
-                    suffixIcon: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(Icons.arrow_drop_down, color: Colors.black),
-                    ),
-                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                    suffixIconConstraints: const BoxConstraints.tightFor(),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide:
-                            const BorderSide(color: Colors.blue, width: 0.0)),
-                    //hintText: hint,
-                  ),
-                )),
-              )),
-          _title('Score value'),
-          _textFields(scoreValue[i]),
-          _title('Passing Year'),
-          _textFields(passingYear[i])
+                ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _title('Course Level Name'),
+              Padding(
+                  padding:
+                      const EdgeInsets.only(left: 10.0, right: 10.0, top: 15.0),
+                  child: InkWell(
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                      showModalBottomSheet<dynamic>(
+                          isScrollControlled: true,
+                          context: context,
+                          backgroundColor: Colors.transparent,
+                          builder: (BuildContext bc) {
+                            return Bottomsheet(
+                              onchanged: ((value) {
+                                courseLevelName[i].text = value;
+                                //Global.courseLevelName.text = value;
+                                setState(() {});
+                              }),
+                              values: const [
+                                'Higher Secondary',
+                                'Diploma',
+                                'Graduate',
+                                'Post Graduate'
+                              ],
+                              selectedvalue: courseLevelName[i].text,
+                            );
+                          });
+                    },
+                    child: AbsorbPointer(
+                        child: TextFormField(
+                      controller: courseLevelName[i],
+                      decoration: InputDecoration(
+                        suffixIcon: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child:
+                              Icon(Icons.arrow_drop_down, color: Colors.black),
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        suffixIconConstraints: const BoxConstraints.tightFor(),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: const BorderSide(
+                                color: Colors.blue, width: 0.0)),
+                        //hintText: hint,
+                      ),
+                    )),
+                  )),
+              _title('Course Name'),
+              _textFields(courseName[i]),
+              _title('Score Type'),
+              Padding(
+                  padding:
+                      const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+                  child: InkWell(
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                      showModalBottomSheet<dynamic>(
+                          isScrollControlled: true,
+                          context: context,
+                          backgroundColor: Colors.transparent,
+                          builder: (BuildContext bc) {
+                            return Bottomsheet(
+                              onchanged: ((value) {
+                                scoreType[i].text = value;
+                                // Global.scoreType.text = value;
+                                setState(() {});
+                              }),
+                              values: const [
+                                'Percentage',
+                                'CGPA',
+                              ],
+                              selectedvalue: scoreType[i].text,
+                            );
+                          });
+                    },
+                    child: AbsorbPointer(
+                        child: TextFormField(
+                      controller: scoreType[i],
+                      decoration: InputDecoration(
+                        suffixIcon: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child:
+                              Icon(Icons.arrow_drop_down, color: Colors.black),
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        suffixIconConstraints: const BoxConstraints.tightFor(),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: const BorderSide(
+                                color: Colors.blue, width: 0.0)),
+                        //hintText: hint,
+                      ),
+                    )),
+                  )),
+              _title('Score value'),
+              _textFields(scoreValue[i]),
+              _title('Passing Year'),
+              _textFields(passingYear[i])
+            ],
+          )
         ],
       ));
     }
@@ -702,7 +736,7 @@ class _AddEligibilityState extends State<AddEligibility> {
                                       builder: (context, isValueChanged) {
                                     return ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                          primary: Colors.orangeAccent),
+                                          primary: secondaryColor),
                                       onPressed:
                                           isValueChanged ? formKey.reset : null,
                                       child: const Text('Reset'),
@@ -740,7 +774,7 @@ class _AddEligibilityState extends State<AddEligibility> {
                                       builder: (context, isValueChanged) {
                                     return ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                          primary: Colors.orangeAccent),
+                                          primary: secondaryColor),
                                       onPressed:
                                           isValueChanged ? formKey.reset : null,
                                       child: const Text('Reset'),
@@ -1105,9 +1139,8 @@ class _BottomsheetState extends State<Bottomsheet> {
                                   height: 10,
                                   width: 10,
                                   decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.black,
-                                  ),
+                                      shape: BoxShape.circle,
+                                      color: secondaryColor),
                                 )
                               : Container(),
                     ),
@@ -1143,29 +1176,30 @@ class _BottomsheetState extends State<Bottomsheet> {
       child: Column(
         children: [
           Container(
-            color: Colors.grey[300],
+            color: secondaryColor,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
                     icon: const Icon(
                       Icons.clear,
                       size: 25,
-                      color: Colors.black,
+                      color: whiteColor,
                     ),
                     onPressed: () {
                       Navigator.pop(context);
                     }),
                 Container(
-                  margin: EdgeInsets.only(
-                      left: MediaQuery.of(context).size.width / 4,
-                      right: MediaQuery.of(context).size.width / 3.6),
                   alignment: Alignment.center,
                   child: const TextWidget(
                     text: "Select ...",
-                    color: Colors.black,
+                    color: whiteColor,
                     size: 15,
                     weight: FontWeight.bold,
                   ),
+                ),
+                Container(
+                  width: 30,
                 )
               ],
             ),

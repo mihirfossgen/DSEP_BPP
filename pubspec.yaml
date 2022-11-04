@@ -89,6 +89,7 @@ flutter:
     - assets/images/default_profile.jpeg
     - assets/images/home_icon.svg
     - assets/images/profile_icon.svg
+    - assets/images/delete.svg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dsep_bpp/provides/ApiServices.dart';
 import 'package:dsep_bpp/screens/tabbar.dart';
 import 'package:dsep_bpp/utils/api.dart';
+import 'package:dsep_bpp/utils/colors_widget.dart';
 import 'package:dsep_bpp/widgets/custom_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -78,8 +79,8 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
     // TODO: implement initState
     super.initState();
     //qualificationCriteriaWidgets.add(addQualificationCriteria());
-    callschemedata();
-    _isLoading = true;
+    //  callschemedata();
+    //_isLoading = true;
     if (widget.routeFrom == "update") {
       routeFromUpdate = true;
       editableData = widget.data;
@@ -129,9 +130,9 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
     );
   }
 
-  DateTime dateformatter1(int dt) {
-    var date = DateTime.fromMicrosecondsSinceEpoch(dt);
-    DateTime parseDt = DateTime.parse(date.toString());
+  DateTime dateformatter1(String dt) {
+    // var date = DateTime.fromMicrosecondsSinceEpoch(dt);
+    DateTime parseDt = DateTime.parse(dt);
     return parseDt;
   }
 
@@ -188,7 +189,7 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
       "schemeName": Scheme_Name,
       "schemeDescription": Scheme_Description,
       "schemeType": Scheme_Type,
-      "schemeProviderID": schemeProviderId,
+      //"schemeProviderID": schemeProviderId,
       "schemeFor": Scheme_For,
       "financialYear": Financial_Year,
       "schemeAmount": Scheme_Amount,
@@ -376,69 +377,69 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
                 )
               ],
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 15.0, right: 10.0, top: 15.0),
-                  child: FormCaptionText('Scheme Provider ID', 0),
-                ),
-                Padding(
-                    padding: const EdgeInsets.only(
-                        left: 10.0, right: 10.0, top: 10.0),
-                    child: InkWell(
-                      onTap: () {
-                        FocusScope.of(context).unfocus();
-                        showModalBottomSheet<dynamic>(
-                            isScrollControlled: true,
-                            context: context,
-                            backgroundColor: Colors.transparent,
-                            builder: (BuildContext bc) {
-                              return Bottomsheet(
-                                onchanged: ((value) {
-                                  schemeProviderIdController.text = value;
-                                  setState(() {});
-                                }),
-                                values: schemeProvidername,
-                                selectedvalue: schemeProviderIdController.text,
-                              );
-                            });
-                      },
-                      child: AbsorbPointer(
-                          child: TextFormField(
-                        controller: schemeProviderIdController,
-                        decoration: InputDecoration(
-                          suffixIcon: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(Icons.arrow_drop_down,
-                                color: Colors.black),
-                          ),
-                          floatingLabelBehavior: FloatingLabelBehavior.never,
-                          suffixIconConstraints:
-                              const BoxConstraints.tightFor(),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                  color: Colors.blue, width: 0.0)),
-                          //hintText: hint,
-                        ),
-                      )),
-                    )
+            // Column(
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   children: [
+            //     Padding(
+            //       padding:
+            //           const EdgeInsets.only(left: 15.0, right: 10.0, top: 15.0),
+            //       child: FormCaptionText('Scheme Provider ID', 0),
+            //     ),
+            //     Padding(
+            //         padding: const EdgeInsets.only(
+            //             left: 10.0, right: 10.0, top: 10.0),
+            //         child: InkWell(
+            //           onTap: () {
+            //             FocusScope.of(context).unfocus();
+            //             showModalBottomSheet<dynamic>(
+            //                 isScrollControlled: true,
+            //                 context: context,
+            //                 backgroundColor: Colors.transparent,
+            //                 builder: (BuildContext bc) {
+            //                   return Bottomsheet(
+            //                     onchanged: ((value) {
+            //                       schemeProviderIdController.text = value;
+            //                       setState(() {});
+            //                     }),
+            //                     values: schemeProvidername,
+            //                     selectedvalue: schemeProviderIdController.text,
+            //                   );
+            //                 });
+            //           },
+            //           child: AbsorbPointer(
+            //               child: TextFormField(
+            //             controller: schemeProviderIdController,
+            //             decoration: InputDecoration(
+            //               suffixIcon: const Padding(
+            //                 padding: EdgeInsets.all(8.0),
+            //                 child: Icon(Icons.arrow_drop_down,
+            //                     color: Colors.black),
+            //               ),
+            //               floatingLabelBehavior: FloatingLabelBehavior.never,
+            //               suffixIconConstraints:
+            //                   const BoxConstraints.tightFor(),
+            //               border: OutlineInputBorder(
+            //                   borderRadius: BorderRadius.circular(15),
+            //                   borderSide: const BorderSide(
+            //                       color: Colors.blue, width: 0.0)),
+            //               //hintText: hint,
+            //             ),
+            //           )),
+            //         )
 
-                    // FormCustomDropDown(
-                    //     initialValue: schemeProvidername[0],
-                    //     name: 'Scheme Provider ID',
-                    //     order: 2,
-                    //     hint: routeFromUpdate
-                    //         ? editableData['schemeProviderID']
-                    //         : "",
-                    //     validator: FormeValidates.notEmpty(
-                    //         errorText: 'Scheme Provider ID is required'),
-                    //     items: schemeProvidername),
-                    )
-              ],
-            ),
+            //         // FormCustomDropDown(
+            //         //     initialValue: schemeProvidername[0],
+            //         //     name: 'Scheme Provider ID',
+            //         //     order: 2,
+            //         //     hint: routeFromUpdate
+            //         //         ? editableData['schemeProviderID']
+            //         //         : "",
+            //         //     validator: FormeValidates.notEmpty(
+            //         //         errorText: 'Scheme Provider ID is required'),
+            //         //     items: schemeProvidername),
+            //         )
+            //   ],
+            // ),
             // Column(
             //   crossAxisAlignment: CrossAxisAlignment.start,
             //   children: [
@@ -799,8 +800,9 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
                                   MaterialPageRoute(
                                       builder: (context) => AddEligibility(
                                             spocdata: editableData,
-                                            routeFrom:
-                                                routeFromUpdate ? "update" : "",
+                                            routeFrom: routeFromUpdate
+                                                ? "update"
+                                                : "home",
                                             data: routeFromUpdate
                                                 ? editableData['eligibility']
                                                 : [],
@@ -988,7 +990,7 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
             StickyHeader(
               header: Container(
                 height: 50.0,
-                color: Colors.blueGrey[700],
+                color: secondaryColor,
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 alignment: Alignment.centerLeft,
                 child: Row(
@@ -1070,7 +1072,7 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
             StickyHeader(
                 header: Container(
                   height: 50.0,
-                  color: Colors.green[800],
+                  color: secondaryColor,
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   alignment: Alignment.centerLeft,
                   child: Row(
@@ -1089,7 +1091,7 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
             StickyHeader(
               header: Container(
                 height: 50.0,
-                color: Colors.yellow[800],
+                color: secondaryColor,
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 alignment: Alignment.centerLeft,
                 child: Row(
@@ -1446,7 +1448,7 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
                                         builder: (context, isValueChanged) {
                                       return ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                            primary: Colors.orangeAccent),
+                                            primary: secondaryColor),
                                         onPressed: isValueChanged
                                             ? formKey.reset
                                             : null,
@@ -1488,7 +1490,7 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
                                         builder: (context, isValueChanged) {
                                       return ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                            primary: Colors.orangeAccent),
+                                            primary: secondaryColor),
                                         onPressed: isValueChanged
                                             ? formKey.reset
                                             : null,
@@ -1686,7 +1688,7 @@ class _BottomsheetState extends State<Bottomsheet> {
                                   width: 10,
                                   decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Colors.black,
+                                    color: secondaryColor,
                                   ),
                                 )
                               : Container(),
@@ -1723,29 +1725,30 @@ class _BottomsheetState extends State<Bottomsheet> {
       child: Column(
         children: [
           Container(
-            color: Colors.grey[300],
+            color: secondaryColor,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
                     icon: const Icon(
                       Icons.clear,
                       size: 25,
-                      color: Colors.black,
+                      color: whiteColor,
                     ),
                     onPressed: () {
                       Navigator.pop(context);
                     }),
                 Container(
-                  margin: EdgeInsets.only(
-                      left: MediaQuery.of(context).size.width / 4,
-                      right: MediaQuery.of(context).size.width / 3.6),
                   alignment: Alignment.center,
                   child: const TextWidget(
                     text: "Select ...",
-                    color: Colors.black,
+                    color: whiteColor,
                     size: 15,
                     weight: FontWeight.bold,
                   ),
+                ),
+                Container(
+                  width: 30,
                 )
               ],
             ),

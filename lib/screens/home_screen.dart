@@ -4,19 +4,14 @@ import 'package:dsep_bpp/screens/create_scheme_screen.dart';
 import 'package:dsep_bpp/widgets/custom_loader.dart';
 import 'package:dsep_bpp/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:flutter/services.dart'
-    show SystemChrome, SystemUiOverlayStyle, rootBundle;
-import 'package:is_first_run/is_first_run.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:provider/provider.dart';
-import '../advance_search.dart';
+
 import 'package:showcaseview/showcaseview.dart';
 import '../utils/api.dart';
 import '../utils/colors_widget.dart';
 import '../utils/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../widgets/custom_drawer/drawer_user_controller.dart';
 import '../widgets/custom_drawer/home_drawer.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:http/http.dart' as http;
@@ -45,7 +40,7 @@ class _HomePageState extends State<HomePage> {
   bool StartDateSelectedStatus = false;
   bool EndDateSelectedStatus = false;
   var color = 0xffe3f2fd;
-  var schemeDatanew;
+
   bool _isloading = false;
   bool _isExpand = false;
 
@@ -75,9 +70,6 @@ class _HomePageState extends State<HomePage> {
 
     _isloading = true;
     GetAllSchemeList();
-
-    print("type schemedata $schemeData.runtimeType");
-    print("type schemedatanew $schemeDatanew.runtimeType");
 
     if (Global.isfirstlogin == true) {
     } else {
@@ -355,7 +347,6 @@ class _HomePageState extends State<HomePage> {
                         indexOnject: schemeData,
                         optionTypeSelect:
                             (String selectedOption, int index) async {
-                          print("abc " + selectedOption + index.toString());
                           if (selectedOption == "Publish") {
                             var result =
                                 await FlutterPlatformAlert.showCustomAlert(
@@ -368,9 +359,8 @@ class _HomePageState extends State<HomePage> {
                                       'Window title',
                                   showAsLinksOnWindows: true),
                             );
-                            print(result);
+
                             if (result == CustomButton.positiveButton) {
-                              print("llll");
                               var data = {};
                               ApiServices()
                                   .publishScheme(
@@ -412,7 +402,7 @@ class _HomePageState extends State<HomePage> {
                                       'Window title',
                                   showAsLinksOnWindows: true),
                             );
-                            print(result);
+
                             if (result == CustomButton.positiveButton) {
                               var data = {};
                               ApiServices()
@@ -463,7 +453,6 @@ class _HomePageState extends State<HomePage> {
                                         data: schemeData[index],
                                       )));
                             }
-                            print("result ------ $result");
                           } else if (selectedOption == "Delete") {
                             var result =
                                 await FlutterPlatformAlert.showCustomAlert(
@@ -476,7 +465,6 @@ class _HomePageState extends State<HomePage> {
                                       'Window title',
                                   showAsLinksOnWindows: true),
                             );
-                            print(result);
                             if (result == CustomButton.positiveButton) {
                               var data = {};
                               ApiServices()
@@ -600,14 +588,12 @@ class _HomePageState extends State<HomePage> {
       var response =
           await http.get(Uri.parse(Api.getSchemeList), headers: headers1);
       var i = 0;
-      print("ResponseCode : ${response.statusCode}");
+
       if (response.statusCode == 200) {
         setState(() {
           _isloading = false;
         });
         schemeData = json.decode(response.body);
-        print("GetScheme_Response :$schemeData");
-        var j = 0;
       } else if (response.statusCode == 401) {
         setState(() {
           _isloading = false;
@@ -672,7 +658,6 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     a = widget.indexOnject;
   }
@@ -681,9 +666,8 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-
     if (_isiterateflag) {
-      for (var i = 1; i <= widget.indexOnject.length; i++) {
+      for (var i = 0; i <= a.length; i++) {
         map.putIfAbsent(i, () => false);
       }
       _isiterateflag = false;
@@ -793,7 +777,7 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                                       Expanded(
                                           flex: 1,
                                           child: Text(
-                                            "Offered By  ",
+                                            "Status  ",
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                                 fontSize: screenWidth * 0.037,
@@ -803,11 +787,16 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                                           flex: 1,
                                           child: Text(
                                             ":  " +
-                                                widget.indexOnject[index]
-                                                        ['schemeProviderID']
-                                                    .toString(),
+                                                (widget.indexOnject[index]
+                                                        ['published']
+                                                    ? "Published"
+                                                    : "Unpublished"),
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
+                                                color: widget.indexOnject[index]
+                                                        ['published']
+                                                    ? Colors.green
+                                                    : Colors.red,
                                                 fontSize: screenWidth * 0.037,
                                                 fontWeight: FontWeight.w500),
                                           ))
@@ -963,11 +952,7 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                                       Expanded(
                                           flex: 1,
                                           child: Text(
-                                            ": " +
-                                                dateformatter1(widget
-                                                            .indexOnject[index]
-                                                        ['startDate'])
-                                                    .toString(),
+                                            ": ${widget.indexOnject[index]['startDate']} ",
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                                 fontSize: screenWidth * 0.037,
@@ -986,7 +971,7 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                                       Expanded(
                                         flex: 1,
                                         child: Text(
-                                          "Start Date",
+                                          "End Date",
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
                                               fontSize: screenWidth * 0.037,
@@ -996,11 +981,7 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                                       Expanded(
                                           flex: 1,
                                           child: Text(
-                                            ": " +
-                                                dateformatter1(widget
-                                                            .indexOnject[index]
-                                                        ['endDate'])
-                                                    .toString(),
+                                            ": ${widget.indexOnject[index]['endDate']}",
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                                 fontSize: screenWidth * 0.037,
@@ -1019,6 +1000,7 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                                 Padding(
                                     padding: const EdgeInsets.only(left: 5),
                                     child: TextButton(
+                                      // ignore: unnecessary_cast
                                       child: map[index] as bool
                                           ? Container(
                                               height: 0,
@@ -1193,9 +1175,9 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                                             )),
                                       ],
                                     )),
-                                Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 12.0, bottom: 12),
+                                const Padding(
+                                    padding:
+                                        EdgeInsets.only(top: 12.0, bottom: 12),
                                     child: Text(
                                       "Eligibility Criteria (Other)",
                                       textAlign: TextAlign.center,
@@ -1287,7 +1269,7 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                                         Expanded(
                                             flex: 1,
                                             child: Text(
-                                              ": less than 5 lakh",
+                                              ": ${widget.indexOnject[index]["eligibility"]["familyIncome"]}",
                                               textAlign: TextAlign.start,
                                               style: TextStyle(
                                                   fontSize: screenWidth * 0.037,
@@ -1295,34 +1277,34 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                                             )),
                                       ],
                                     )),
-                                Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 5.0,
-                                        bottom: 10,
-                                        left: 12,
-                                        right: 12),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          flex: 1,
-                                          child: Text(
-                                            "Caste ",
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                                fontSize: screenWidth * 0.037,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        ),
-                                        Expanded(
-                                            flex: 1,
-                                            child: Text(
-                                              ": NA",
-                                              style: TextStyle(
-                                                  fontSize: screenWidth * 0.037,
-                                                  fontWeight: FontWeight.w500),
-                                            )),
-                                      ],
-                                    )),
+                                // Padding(
+                                //     padding: const EdgeInsets.only(
+                                //         top: 5.0,
+                                //         bottom: 10,
+                                //         left: 12,
+                                //         right: 12),
+                                //     child: Row(
+                                //       children: [
+                                //         Expanded(
+                                //           flex: 1,
+                                //           child: Text(
+                                //             "Caste ",
+                                //             textAlign: TextAlign.start,
+                                //             style: TextStyle(
+                                //                 fontSize: screenWidth * 0.037,
+                                //                 fontWeight: FontWeight.w500),
+                                //           ),
+                                //         ),
+                                //         Expanded(
+                                //             flex: 1,
+                                //             child: Text(
+                                //               ": NA",
+                                //               style: TextStyle(
+                                //                   fontSize: screenWidth * 0.037,
+                                //                   fontWeight: FontWeight.w500),
+                                //             )),
+                                //       ],
+                                //     )),
 
                                 Padding(
                                     padding: const EdgeInsets.only(left: 8.0),

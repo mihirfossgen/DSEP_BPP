@@ -120,6 +120,7 @@ class _SignUpState extends State<SignUpPage> {
           : PlatformElevatedButton(
               color: Theme.of(context).primaryColor,
               onPressed: () {
+                FocusScope.of(context).unfocus();
                 if (_userIdController.text.isNotEmpty &&
                         _name.text.isNotEmpty &&
                         _passWord.text.isNotEmpty
@@ -134,12 +135,12 @@ class _SignUpState extends State<SignUpPage> {
                   var req = {
                     "userId": _userIdController.text,
                     "password": _passWord.text,
-                    "location": _location.text,
+                    "location": "Mumbai",
                     "fullName": _name.text,
                     "providerId": "5f554478-0c1e-4f8f-83ab-f5a95394a3ee"
                   };
                   ApiServices().signUpUser(req).then((value) {
-                    if (value["status"] == true) {
+                    if (value == true) {
                       setState(() {
                         loader = false;
                       });

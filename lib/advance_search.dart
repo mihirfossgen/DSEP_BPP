@@ -173,7 +173,7 @@ class _AdvanceSearchPageState extends State<AdvanceSearchPage> {
                                     "$status",
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
                                 Row(
