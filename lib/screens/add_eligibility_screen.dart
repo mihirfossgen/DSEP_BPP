@@ -14,6 +14,7 @@ import '../models/create_scheme_model.dart';
 import './../widgets/title_text.dart';
 import './../widgets/value_text.dart';
 import '../widgets/responsive_ui.dart';
+import 'schema_questions.dart';
 
 class AddEligibility extends StatefulWidget {
   final String routeFrom;
@@ -56,6 +57,7 @@ class _AddEligibilityState extends State<AddEligibility> {
   List<TextEditingController> passingYear = [];
   static TextEditingController gender = TextEditingController();
   static TextEditingController familyIncome = TextEditingController();
+  var additionalQuestions;
   // static TextEditingController courseLevelName = TextEditingController();
   List<TextEditingController> scoreType = [];
 
@@ -99,7 +101,8 @@ class _AddEligibilityState extends State<AddEligibility> {
         // religon: values['Religon'],
         // state: values['State'],
         );
-    Navigator.pop(context, {'details': eligibility});
+    Navigator.pop(context,
+        {'details': eligibility, 'additionalQuestion': additionalQuestions});
   }
 
   List a = [];
@@ -338,7 +341,7 @@ class _AddEligibilityState extends State<AddEligibility> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         Icon(Icons.add, color: primaryColor, size: 20),
                         TextWidget(
                           text: "Press to add extra academic details",
@@ -355,157 +358,154 @@ class _AddEligibilityState extends State<AddEligibility> {
 
                 //     }),
                 //     child: const Icon(Icons.add)),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding:
-                        EdgeInsets.only(left: 15.0, right: 10.0, top: 20.0),
-                    child: TextWidget(
-                      text: 'Additional Information',
-                      size: 25,
-                      weight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 10.0, top: 15.0),
-                      child: FormCaptionText('Spoc Name', 0),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10.0, right: 10.0, top: 15.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: FormCustomTextField(
-                                name: "Spoc Name",
-                                order: 4,
-                                hint: '',
-                                initalValue:
-                                    routeForUpdate ? spocData['spocName'] : "",
-                                validator:
-                                    FormeValidates.notEmpty(errorText: ''),
-                                keyboardType: TextInputType.name,
-                                cornerRadius: 15.0,
-                                cursorColor: Colors.blue,
-                                borderColor: Colors.grey,
-                                icon: const ValidationIcon()),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 10.0, top: 15.0),
-                      child: FormCaptionText('Spoc Email', 0),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10.0, right: 10.0, top: 15.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: FormCustomTextField(
-                                initalValue:
-                                    routeForUpdate ? spocData['spocEmail'] : "",
-                                name: 'Spoc Email',
-                                order: 4,
-                                hint: '',
-                                validator:
-                                    FormeValidates.notEmpty(errorText: ''),
-                                keyboardType: TextInputType.name,
-                                cornerRadius: 15.0,
-                                cursorColor: Colors.blue,
-                                borderColor: Colors.grey,
-                                icon: const ValidationIcon()),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 10.0, top: 15.0),
-                      child: FormCaptionText('Help Desk No', 0),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10.0, right: 10.0, top: 15.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: FormCustomTextField(
-                                initalValue: routeForUpdate
-                                    ? spocData['helpdeskNo']
-                                    : "",
-                                name: 'Help Desk No',
-                                order: 9,
-                                hint: 'Min',
-                                validator:
-                                    FormeValidates.notEmpty(errorText: ''),
-                                keyboardType: TextInputType.number,
-                                cornerRadius: 15.0,
-                                cursorColor: Colors.blue,
-                                borderColor: Colors.grey,
-                                icon: const ValidationIcon()),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
+                // const Align(
+                //   alignment: Alignment.centerLeft,
+                //   child: Padding(
+                //     padding:
+                //         EdgeInsets.only(left: 15.0, right: 10.0, top: 20.0),
+                //     child: TextWidget(
+                //       text: 'Additional Information',
+                //       size: 25,
+                //       weight: FontWeight.bold,
+                //     ),
+                //   ),
+                // ),
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //     Padding(
+                //       padding: const EdgeInsets.only(
+                //           left: 15.0, right: 10.0, top: 15.0),
+                //       child: FormCaptionText('Spoc Name', 0),
+                //     ),
+                //     Padding(
+                //       padding: const EdgeInsets.only(
+                //           left: 10.0, right: 10.0, top: 15.0),
+                //       child: Row(
+                //         children: [
+                //           Expanded(
+                //             child: FormCustomTextField(
+                //                 name: "Spoc Name",
+                //                 order: 4,
+                //                 hint: '',
+                //                 initalValue:
+                //                     routeForUpdate ? spocData['spocName'] : "",
+                //                 validator:
+                //                     FormeValidates.notEmpty(errorText: ''),
+                //                 keyboardType: TextInputType.name,
+                //                 cornerRadius: 15.0,
+                //                 cursorColor: Colors.blue,
+                //                 borderColor: Colors.grey,
+                //                 icon: const ValidationIcon()),
+                //           ),
+                //         ],
+                //       ),
+                //     )
+                //   ],
+                // ),
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //     Padding(
+                //       padding: const EdgeInsets.only(
+                //           left: 15.0, right: 10.0, top: 15.0),
+                //       child: FormCaptionText('Spoc Email', 0),
+                //     ),
+                //     Padding(
+                //       padding: const EdgeInsets.only(
+                //           left: 10.0, right: 10.0, top: 15.0),
+                //       child: Row(
+                //         children: [
+                //           Expanded(
+                //             child: FormCustomTextField(
+                //                 initalValue:
+                //                     routeForUpdate ? spocData['spocEmail'] : "",
+                //                 name: 'Spoc Email',
+                //                 order: 4,
+                //                 hint: '',
+                //                 validator:
+                //                     FormeValidates.notEmpty(errorText: ''),
+                //                 keyboardType: TextInputType.name,
+                //                 cornerRadius: 15.0,
+                //                 cursorColor: Colors.blue,
+                //                 borderColor: Colors.grey,
+                //                 icon: const ValidationIcon()),
+                //           ),
+                //         ],
+                //       ),
+                //     )
+                //   ],
+                // ),
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //     Padding(
+                //       padding: const EdgeInsets.only(
+                //           left: 15.0, right: 10.0, top: 15.0),
+                //       child: FormCaptionText('Help Desk No', 0),
+                //     ),
+                //     Padding(
+                //       padding: const EdgeInsets.only(
+                //           left: 10.0, right: 10.0, top: 15.0),
+                //       child: Row(
+                //         children: [
+                //           Expanded(
+                //             child: FormCustomTextField(
+                //                 initalValue: routeForUpdate
+                //                     ? spocData['helpdeskNo']
+                //                     : "",
+                //                 name: 'Help Desk No',
+                //                 order: 9,
+                //                 hint: 'Min',
+                //                 validator:
+                //                     FormeValidates.notEmpty(errorText: ''),
+                //                 keyboardType: TextInputType.number,
+                //                 cornerRadius: 15.0,
+                //                 cursorColor: Colors.blue,
+                //                 borderColor: Colors.grey,
+                //                 icon: const ValidationIcon()),
+                //           ),
+                //         ],
+                //       ),
+                //     )
+                //   ],
+                // ),
               ],
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             Column(
               children: eligibilityDetailsWidgets.map((e) => e.widget).toList(),
             ),
-            // Container(
-            //   padding: const EdgeInsets.symmetric(horizontal: 10),
-            //   child: TextButton(
-            //     onPressed: (() async {
-            //       Map<String, dynamic> object = await Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //             builder: (context) => const AddQualification()),
-            //       );
-            //       List<PastEducation> educationDetails = object['details'];
-            //       if (educationDetails.isNotEmpty) {
-            //         appendDetails(educationDetails);
-            //       }
-            //     }),
-            //     child: Padding(
-            //       padding: const EdgeInsets.all(10),
-            //       child: Center(
-            //         child: Column(
-            //           mainAxisSize: MainAxisSize.min,
-            //           children: const [
-            //             Icon(Icons.add),
-            //             Text('Add Qualification')
-            //           ],
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: TextButton(
+                onPressed: (() async {
+                  var object = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SchemeQuestions()),
+                  );
+                  if (object != null) {
+                    additionalQuestions = object;
+                    setState(() {});
+                  }
+                }),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Icon(Icons.add),
+                        Text('Additional Questions')
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(
               height: 20,
             ),
@@ -733,85 +733,40 @@ class _AddEligibilityState extends State<AddEligibility> {
                     for (var item in loadFormFieldSection())
                       Container(child: item),
                     const SizedBox(height: 10),
-                    routeForUpdate
-                        ? Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  height: 50,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                  child: FormeIsValueChangedListener(
-                                      builder: (context, isValueChanged) {
-                                    return ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          primary: secondaryColor),
-                                      onPressed:
-                                          isValueChanged ? formKey.reset : null,
-                                      child: const Text('Reset'),
-                                    );
-                                  }),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  height: 50,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                  child: FormeValidationListener(
-                                      builder: (context, validation, child) {
-                                    return ElevatedButton(
-                                      onPressed: () {
-                                        getUpdatedValueAndSubmitForm(
-                                            formKey.value);
-                                      },
-                                      child: const Text('Submit'),
-                                    );
-                                  }),
-                                ),
-                              ),
-                            ],
-                          )
-                        : Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  height: 50,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                  child: FormeIsValueChangedListener(
-                                      builder: (context, isValueChanged) {
-                                    return ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          primary: secondaryColor),
-                                      onPressed:
-                                          isValueChanged ? formKey.reset : null,
-                                      child: const Text('Reset'),
-                                    );
-                                  }),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  height: 50,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                  child: FormeValidationListener(
-                                      builder: (context, validation, child) {
-                                    return ElevatedButton(
-                                      onPressed: validation.isValid
-                                          ? () {
-                                              getUpdatedValueAndSubmitForm(
-                                                  formKey.value);
-                                            }
-                                          : null,
-                                      child: const Text('Submit'),
-                                    );
-                                  }),
-                                ),
-                              ),
-                            ],
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 50,
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            child: FormeIsValueChangedListener(
+                                builder: (context, isValueChanged) {
+                              return ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: secondaryColor),
+                                onPressed: () {},
+                                child: const Text('Reset'),
+                              );
+                            }),
                           ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: 50,
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            child: FormeValidationListener(
+                                builder: (context, validation, child) {
+                              return ElevatedButton(
+                                onPressed: () {
+                                  getUpdatedValueAndSubmitForm(formKey.value);
+                                },
+                                child: const Text('Submit'),
+                              );
+                            }),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -1224,19 +1179,5 @@ class _BottomsheetState extends State<Bottomsheet> {
         ],
       ),
     );
-  }
-}
-
-class AcademicDetails extends StatefulWidget {
-  const AcademicDetails({Key? key}) : super(key: key);
-
-  @override
-  State<AcademicDetails> createState() => _AcademicDetailsState();
-}
-
-class _AcademicDetailsState extends State<AcademicDetails> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }

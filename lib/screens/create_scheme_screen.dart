@@ -74,6 +74,7 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
   TextEditingController schemeForController = TextEditingController();
   TextEditingController financialYearController = TextEditingController();
   String _selectedSchemeFor = "";
+  var addtionalQuestionsData;
 
   @override
   void initState() {
@@ -217,9 +218,7 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
         "familyIncome": details.familyIncome
       },
       "addtnlInfoReq": "e8923y2jbu32848ab",
-      "spocName": details.spocName,
-      "spocEmail": details.spocEmail,
-      "helpdeskNo": details.helpdeskNo
+      "additionalQuestions": addtionalQuestionsData
     };
     print(jsonEncode(req));
     if (widget.routeFrom == "home") {
@@ -834,9 +833,13 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
                                                 : [],
                                           )),
                                 );
+                                print(object);
                                 if (object['details'] != null) {
                                   details = object['details'];
-                                  appendDetails(details);
+                                  addtionalQuestionsData =
+                                      object['additionalQuestion'];
+                                  appendDetails(
+                                      details, object['additionalQuestion']);
                                 }
                               }),
                               child: Padding(
@@ -873,7 +876,123 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
     return children;
   }
 
-  void appendDetails(Eligibility? details) {
+  List<Widget> additionalQuestonsUi(var additionalQuestions) {
+    List a = additionalQuestions['xInput'];
+    print("end title ${a.length}");
+    List<Widget> ui = [];
+
+    String name(String txt) {
+      //debugPrint(txt);
+      switch (txt) {
+        case "txtName":
+          return "Text";
+        case "txtNumberField":
+          return "Number";
+        case "fileField":
+          return "File";
+        case "dateField":
+          return "Date";
+        case "radiobuttons":
+          return "Radio Buttons";
+        case "checkboxes":
+          return "Check Boxes";
+        case "select":
+          return "Select";
+        default:
+          return "";
+      }
+    }
+
+    String options(List a) {
+      print(a);
+      List<String> b = [];
+      for (var i = 0; i < a.length; i++) {
+        b.add(a[i]["value"]);
+      }
+
+      return b.join(", ");
+    }
+
+    for (var i = 0; i < a.length; i++) {
+      ui.add(Container(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 12),
+                  child: TitleText(
+                    'Field Type:',
+                    0,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: ValueText(
+                    name(a[i]['name']),
+                    0,
+                  ),
+                )
+              ],
+            ),
+            WidgetUtl.getVerticalSpace(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 12),
+                  child: TitleText(
+                    'Title:',
+                    0,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: ValueText(
+                    (a[i]['title']),
+                    0,
+                  ),
+                )
+              ],
+            ),
+            a[i]['name'] == "radiobuttons" ||
+                    a[i]['name'] == "checkboxes" ||
+                    a[i]['name'] == "select"
+                ? Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12),
+                          child: TitleText(
+                            'Options:',
+                            0,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5, right: 5),
+                          child: ValueText(
+                            options(a[i]['options']),
+                            0,
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                : WidgetUtl.getVerticalSpace(),
+          ],
+        ),
+      ));
+    }
+    return ui;
+  }
+
+  void appendDetails(Eligibility? details, var additionalQuestions) {
+    print(additionalQuestions);
+    List additionalquestions = additionalQuestions['xInput'];
+    print(additionalquestions);
     if (details != null) {
       eligibilityDetails = details;
       var educationDetials = eligibilityDetails.pastEducation;
@@ -1125,76 +1244,81 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const <Widget>[
                       Text(
-                        'Additional Information',
+                        'Additional Questions',
                         style: TextStyle(color: Colors.white),
                       ),
                     ]),
               ),
               content: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      WidgetUtl.getVerticalSpace(),
-                      WidgetUtl.getVerticalSpace(),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 12),
-                        child: TitleText(
-                          ('Spoc Name:'),
-                          0,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5, right: 5),
-                        child: ValueText(
-                          (eligibilityDetails.spocName ?? ''),
-                          0,
-                        ),
-                      )
-                    ],
+                  WidgetUtl.getVerticalSpace(),
+                  Column(
+                    children: additionalQuestonsUi(additionalQuestions),
                   ),
                   WidgetUtl.getVerticalSpace(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 12),
-                        child: TitleText(
-                          ('Spoc Email:'),
-                          0,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5, right: 5),
-                        child: ValueText(
-                          (eligibilityDetails.spocEmail ?? ''),
-                          0,
-                        ),
-                      )
-                    ],
-                  ),
-                  WidgetUtl.getVerticalSpace(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 12),
-                        child: TitleText(
-                          ('Help Desk No:'),
-                          0,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5, right: 5),
-                        child: ValueText(
-                          (eligibilityDetails.helpdeskNo ?? ''),
-                          0,
-                        ),
-                      )
-                    ],
-                  )
                 ],
               ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.start,
+              //   children: <Widget>[
+              //     WidgetUtl.getVerticalSpace(),
+              //     WidgetUtl.getVerticalSpace(),
+              //     Padding(
+              //       padding: const EdgeInsets.only(left: 12),
+              //       child: TitleText(
+              //         ('Spoc Name:'),
+              //         0,
+              //       ),
+              //     ),
+              //     Padding(
+              //       padding: const EdgeInsets.only(left: 5, right: 5),
+              //       child: ValueText(
+              //         (eligibilityDetails.spocName ?? ''),
+              //         0,
+              //       ),
+              //     )
+              //   ],
+              // ),
+              // WidgetUtl.getVerticalSpace(),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.start,
+              //   children: <Widget>[
+              //     Padding(
+              //       padding: const EdgeInsets.only(left: 12),
+              //       child: TitleText(
+              //         ('Spoc Email:'),
+              //         0,
+              //       ),
+              //     ),
+              //     Padding(
+              //       padding: const EdgeInsets.only(left: 5, right: 5),
+              //       child: ValueText(
+              //         (eligibilityDetails.spocEmail ?? ''),
+              //         0,
+              //       ),
+              //     )
+              //   ],
+              // ),
+              // WidgetUtl.getVerticalSpace(),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.start,
+              //   children: <Widget>[
+              //     Padding(
+              //       padding: const EdgeInsets.only(left: 12),
+              //       child: TitleText(
+              //         ('Help Desk No:'),
+              //         0,
+              //       ),
+              //     ),
+              //     Padding(
+              //       padding: const EdgeInsets.only(left: 5, right: 5),
+              //       child: ValueText(
+              //         (eligibilityDetails.helpdeskNo ?? ''),
+              //         0,
+              //       ),
+              //     )
+              //   ],
+              // )
             )
           ],
         ),
