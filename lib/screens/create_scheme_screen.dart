@@ -73,6 +73,7 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
   TextEditingController schemeTypeController = TextEditingController();
   TextEditingController schemeForController = TextEditingController();
   TextEditingController financialYearController = TextEditingController();
+  String _selectedSchemeFor = "";
 
   @override
   void initState() {
@@ -86,8 +87,17 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
       editableData = widget.data;
       schemeProviderIdController.text = editableData['schemeProviderID'];
       schemeTypeController.text = editableData['schemeType'];
-      schemeForController.text = editableData['schemeFor'];
       financialYearController.text = editableData['financialYear'];
+      if (editableData['schemeFor'] == 'ug') {
+        _selectedSchemeFor = 'ug';
+        schemeForController.text = "Under Graduate";
+      } else if (editableData['schemeFor'] == 'pg') {
+        _selectedSchemeFor = 'pg';
+        schemeForController.text = 'Post Graduate';
+      } else {
+        _selectedSchemeFor = 'gr';
+        schemeForController.text = 'Grade';
+      }
     }
   }
 
@@ -148,8 +158,14 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
       BuildContext context, Map<String, dynamic> values) {
     values["Scheme Provider ID"] = schemeProviderIdController.text;
     values["Scheme Type"] = schemeTypeController.text;
-    values["Scheme For"] = schemeForController.text;
     values['Financial Year'] = financialYearController.text;
+    if (schemeForController.text == 'Under Graduate') {
+      values["Scheme For"] = 'ug';
+    } else if (schemeForController.text == 'Post Graduate') {
+      values["Scheme For"] = 'pg';
+    } else {
+      values["Scheme For"] = 'gr';
+    }
     //String Scheme_ID = values["Scheme ID"];
     String Scheme_Name = values["Scheme Name"] as String;
     String Scheme_Description = values["Scheme Description"] as String;
@@ -654,13 +670,21 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
                               return Bottomsheet(
                                 onchanged: ((value) {
                                   schemeForController.text = value;
+                                  if (schemeForController.text ==
+                                      'Under Graduate') {
+                                    _selectedSchemeFor = 'ug';
+                                  } else if (schemeForController.text ==
+                                      'Post Graduate') {
+                                    _selectedSchemeFor = 'pg';
+                                  } else {
+                                    _selectedSchemeFor = 'gr';
+                                  }
                                   setState(() {});
                                 }),
                                 values: const [
                                   'Under Graduate',
                                   'Post Graduate',
-                                  'Phd',
-                                  'Professional/Skill Course'
+                                  'Grade'
                                 ],
                                 selectedvalue: schemeForController.text,
                               );
@@ -799,6 +823,8 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => AddEligibility(
+                                            selectedSchemeFor:
+                                                _selectedSchemeFor,
                                             spocdata: editableData,
                                             routeFrom: routeFromUpdate
                                                 ? "update"

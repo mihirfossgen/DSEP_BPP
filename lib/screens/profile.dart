@@ -5,6 +5,7 @@ import 'package:dsep_bpp/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import '../widgets/custom_drawer/app_theme.dart';
+import 'applied_scheme.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -105,7 +106,71 @@ class _ProfileState extends State<Profile> {
             height: 50,
           ),
           Column(
-            children: _listTile(),
+            children: [
+              Container(
+                height: 50,
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(color: whiteColor, boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey.shade300,
+                      blurRadius: 2,
+                      spreadRadius: 2)
+                ]),
+                child: ListTile(
+                  title: const Text(
+                    'Applied Schmes',
+                    style: TextStyle(
+                      fontFamily: AppTheme.fontName,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: AppTheme.darkText,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                  trailing: const Icon(
+                    Icons.power_settings_new,
+                    color: Colors.red,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: ((context) => const AppliedScreens())));
+                  },
+                ),
+              ),
+              Container(
+                height: 50,
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(color: whiteColor, boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey.shade300,
+                      blurRadius: 2,
+                      spreadRadius: 2)
+                ]),
+                child: ListTile(
+                  title: const Text(
+                    'Sign Out',
+                    style: TextStyle(
+                      fontFamily: AppTheme.fontName,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: AppTheme.darkText,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                  trailing: const Icon(
+                    Icons.power_settings_new,
+                    color: Colors.red,
+                  ),
+                  onTap: () {
+                    onTapped();
+                  },
+                ),
+              ),
+            ],
           ),
           Spacer(),
           Row(

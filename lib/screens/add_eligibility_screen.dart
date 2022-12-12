@@ -17,9 +17,15 @@ import '../widgets/responsive_ui.dart';
 
 class AddEligibility extends StatefulWidget {
   final String routeFrom;
+  final String selectedSchemeFor;
   var data;
   var spocdata;
-  AddEligibility({Key? key, required this.routeFrom, this.spocdata, this.data})
+  AddEligibility(
+      {Key? key,
+      required this.routeFrom,
+      required this.selectedSchemeFor,
+      this.spocdata,
+      this.data})
       : super(key: key);
 
   @override
@@ -97,6 +103,7 @@ class _AddEligibilityState extends State<AddEligibility> {
   }
 
   List a = [];
+  List<String> courseLevelNameList = [];
 
   @override
   void initState() {
@@ -116,6 +123,13 @@ class _AddEligibilityState extends State<AddEligibility> {
     } else {
       gender.text = "";
       familyIncome.text = "";
+    }
+    if (widget.selectedSchemeFor == "pg") {
+      courseLevelNameList = ['Under Graduate', 'Grade'];
+    } else if (widget.selectedSchemeFor == "ug") {
+      courseLevelNameList = ['Grade'];
+    } else {
+      courseLevelNameList = ['Grade'];
     }
 
     initalData();
@@ -556,12 +570,7 @@ class _AddEligibilityState extends State<AddEligibility> {
                                 //Global.courseLevelName.text = value;
                                 setState(() {});
                               }),
-                              values: const [
-                                'Higher Secondary',
-                                'Diploma',
-                                'Graduate',
-                                'Post Graduate'
-                              ],
+                              values: courseLevelNameList,
                               selectedvalue: courseLevelName[i].text,
                             );
                           });
