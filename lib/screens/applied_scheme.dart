@@ -50,6 +50,26 @@ class _AppliedScreensState extends State<AppliedScreens> {
                   Expanded(
                       flex: 1,
                       child: Text(
+                        "Application ID : abc ",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                            fontSize: w * 0.037, fontWeight: FontWeight.w500),
+                      )),
+                  Expanded(
+                      flex: 1,
+                      child: Text(
+                        "Application Date : 13/12/2022",
+                        textAlign: TextAlign.end,
+                        style: TextStyle(
+                            fontSize: w * 0.037, fontWeight: FontWeight.w500),
+                      )),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Text(
                         "Scheme Name : abc ",
                         textAlign: TextAlign.start,
                         style: TextStyle(
@@ -80,7 +100,7 @@ class _AppliedScreensState extends State<AppliedScreens> {
                   Expanded(
                       flex: 1,
                       child: Text(
-                        "Scheme Applied : Yes ",
+                        "Appliaction Status: Applied",
                         textAlign: TextAlign.start,
                         style: TextStyle(
                             fontSize: w * 0.037, fontWeight: FontWeight.w500),
