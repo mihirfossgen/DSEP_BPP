@@ -216,7 +216,7 @@ class _CreateSchemeState extends State<CreateSchemeScreen> {
         "gender": details.gender,
         "familyIncome": details.familyIncome
       },
-      "addtnlInfoReq": "e8923y2jbu32848ab",
+      "addtnlInfoReq": details.addtnlInfoReq,
       "spocName": details.spocName,
       "spocEmail": details.spocEmail,
       "helpdeskNo": details.helpdeskNo

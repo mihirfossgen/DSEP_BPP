@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dsep_bpp/provides/ApiServices.dart';
 import 'package:dsep_bpp/screens/tabbar.dart';
 import 'package:dsep_bpp/utils/colors_widget.dart';
@@ -29,6 +31,7 @@ class _SignUpState extends State<SignUpPage> {
   late bool _large;
   late bool _medium;
   late double _top;
+  late double _bottom;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +40,7 @@ class _SignUpState extends State<SignUpPage> {
     _large = Responsive.isScreenLarge(_width, _pixelRatio);
     _medium = Responsive.isScreenMedium(_width, _pixelRatio);
     _top = MediaQuery.of(context).viewPadding.top;
+    _bottom = MediaQuery.of(context).viewPadding.bottom;
     return SafeArea(
         top: false,
         child: Scaffold(
@@ -57,19 +61,47 @@ class _SignUpState extends State<SignUpPage> {
               child: SingleChildScrollView(
             child: Column(
               children: [
-                Padding(
-                  //padding: EdgeInsets.only(top: _top * 5.5),
-                  padding: _large
-                      ? EdgeInsets.only(top: _top * 5.5)
-                      : _medium
-                          ? (EdgeInsets.only(top: _top * 1.5))
-                          : (EdgeInsets.only(top: _top * 2.5)),
-                  child: Image.asset(
-                    'assets/images/protean_logo.png',
-                    width: _width / 2,
-                    height: _width / 4,
-                    fit: BoxFit.contain,
+                Align(
+                  heightFactor: 2,
+                  alignment: Alignment.bottomLeft,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Icon(Icons.arrow_back, size: 30),
                   ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: _large
+                          ? EdgeInsets.only(top: _top * 5.5)
+                          : _medium
+                              ? (EdgeInsets.only(top: _top * 1.5))
+                              : (EdgeInsets.only(top: _top * 2.5)),
+                      child: Image.asset(
+                        'assets/images/protean_logo.png',
+                        width: _width / 2.5,
+                        height: _width / 4,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    Padding(
+                      padding: _large
+                          ? EdgeInsets.only(top: _top * 5.5)
+                          : _medium
+                              ? (EdgeInsets.only(top: _top * 1.5))
+                              : (EdgeInsets.only(top: _top * 2.5)),
+                      child: Image.asset(
+                        'assets/images/fossgen_logo.png',
+                        width: _width / 2.5,
+                        height: _width / 4,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 10),
                 const SizedBox(
@@ -105,7 +137,17 @@ class _SignUpState extends State<SignUpPage> {
                 button()
               ],
             ),
-          ))
+          )),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: _bottom),
+              child: const Text(
+                'Powerd by Protean & Fossgen',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -139,13 +181,13 @@ class _SignUpState extends State<SignUpPage> {
                     "fullName": _name.text,
                     "providerId": "5f554478-0c1e-4f8f-83ab-f5a95394a3ee"
                   };
+                  print(jsonEncode(req));
                   ApiServices().signUpUser(req).then((value) {
                     if (value == true) {
                       setState(() {
                         loader = false;
                       });
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => const Tabbar()));
+                      Navigator.pop(context);
                     } else {
                       setState(() {
                         loader = false;

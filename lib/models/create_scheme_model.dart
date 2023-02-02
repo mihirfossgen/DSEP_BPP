@@ -152,6 +152,7 @@ class Eligibility {
   String? helpdeskNo;
   List? academicDetails;
   String? passingYear;
+  bool? addtnlInfoReq;
 
   Eligibility(
       {this.pastEducation,
@@ -172,7 +173,8 @@ class Eligibility {
       this.scoreValue,
       this.spocEmail,
       this.spocName,
-      this.passingYear});
+      this.passingYear,
+      this.addtnlInfoReq});
 
   Eligibility.fromJson(Map<String, dynamic> json) {
     if (json['pastEducation'] != null) {
@@ -182,6 +184,7 @@ class Eligibility {
       });
     }
     academicDetails = json['academicDetails'];
+    addtnlInfoReq = json['addtnlInfoReq'];
     gender = json['gender'];
     familyIncome = json['familyIncome'];
     state = json['state'];
@@ -208,6 +211,7 @@ class Eligibility {
     }
     data['gender'] = gender;
     data['familyIncome'] = familyIncome;
+    data['addtnlInfoReq'] = addtnlInfoReq;
     data['state'] = state;
     data['district'] = district;
     data['cityOrBlockOrTaluka'] = cityOrBlockOrTaluka;
