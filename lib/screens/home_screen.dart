@@ -606,7 +606,6 @@ class _HomePageState extends State<HomePage> {
         //     backgroundColor: Colors.black,
         //     textColor: Colors.white,
         //     fontSize: 16.0);
-
       } else {
         setState(() {
           _isloading = false;
@@ -619,10 +618,8 @@ class _HomePageState extends State<HomePage> {
         //     backgroundColor: Colors.black,
         //     textColor: Colors.white,
         //     fontSize: 16.0);
-
       }
       //_showerrorDialog('Invalid UID');
-
     } catch (e) {
       return e.toString();
     }
@@ -1237,14 +1234,35 @@ class _ReusbaleRowState extends State<ReusbaleRow> {
                                         ),
                                         Expanded(
                                             flex: 1,
-                                            child: Text(
-                                              ": " +
-                                                  widget.indexOnject[index]
-                                                      ["eligibility"]["gender"],
-                                              textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                  fontSize: screenWidth * 0.037,
-                                                  fontWeight: FontWeight.w500),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  ": ",
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          screenWidth * 0.037,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                Text(
+                                                  widget.indexOnject[index][
+                                                                  "eligibility"]
+                                                              ["gender"] !=
+                                                          null
+                                                      ? widget.indexOnject[
+                                                                  index]
+                                                              ["eligibility"]
+                                                          ["gender"]
+                                                      : 'NA',
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          screenWidth * 0.037,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                )
+                                              ],
                                             )),
                                       ],
                                     )),

@@ -129,8 +129,8 @@ class _ProfileState extends State<Profile> {
                     textAlign: TextAlign.left,
                   ),
                   trailing: const Icon(
-                    Icons.power_settings_new,
-                    color: Colors.red,
+                    Icons.list,
+                    color: Colors.black,
                   ),
                   onTap: () {
                     Navigator.push(

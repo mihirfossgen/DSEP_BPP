@@ -118,32 +118,42 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
-                        Padding(
-                          //padding: EdgeInsets.only(top: _top * 5.5),
-                          padding: _large
-                              ? EdgeInsets.only(top: _top * 5.5)
-                              : _medium
-                                  ? (EdgeInsets.only(top: _top * 1.5))
-                                  : (EdgeInsets.only(top: _top * 2.5)),
-                          child: Image.asset(
-                            'assets/images/protean_logo.png',
-                            width: _width / 2,
-                            height: _width / 4,
-                            fit: BoxFit.contain,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: _large
+                                  ? EdgeInsets.only(top: _top * 5.5)
+                                  : _medium
+                                      ? (EdgeInsets.only(top: _top * 1.5))
+                                      : (EdgeInsets.only(top: _top * 2.5)),
+                              child: Image.asset(
+                                'assets/images/protean_logo.png',
+                                width: _width / 2.5,
+                                height: _width / 4,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            Padding(
+                              padding: _large
+                                  ? EdgeInsets.only(top: _top * 5.5)
+                                  : _medium
+                                      ? (EdgeInsets.only(top: _top * 1.5))
+                                      : (EdgeInsets.only(top: _top * 2.5)),
+                              child: Image.asset(
+                                'assets/images/fossgen_logo.png',
+                                width: _width / 2.5,
+                                height: _width / 4,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 10),
                         welcomeTextRow(),
                         form(context),
-
                         button(),
-                        // Flexible(
-                        //   child: SizedBox(
-                        //     width: _width,
-                        //     height: 100,
-                        //     child: Image.asset('assets/images/bottom-bg.png'),
-                        //   ),
-                        // ),
                         const SizedBox(height: 10),
                         signUp()
                       ],
@@ -155,7 +165,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(bottom: _bottom),
                     child: const Text(
-                      'Powerd by Protean',
+                      'Powerd by Protean & Fossgen',
                       style:
                           TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                     ),
@@ -174,7 +184,7 @@ class _SignInScreenState extends State<SignInScreen> {
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Text(
-          "Welcome to DSEP Scholarship Discovery BPP App",
+          "Welcome to DSEP Scholarship and Grant Discovery BPP App",
           textAlign: TextAlign.center,
           style: TextStyle(
             fontWeight: FontWeight.w500,
@@ -404,7 +414,6 @@ class _SignInScreenState extends State<SignInScreen> {
             fontSize: 16.0);
       }
       //_showerrorDialog('Invalid UID');
-
     } catch (e) {
       return e.toString();
     }

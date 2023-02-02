@@ -62,8 +62,38 @@ class ApiServices {
     }
   }
 
+  Future getAppliedSchemes() async {
+    try {
+      Map<String, String> userheader = {
+        "Content-Type": "application/json",
+        "Authorization": authroziation
+      };
+      var resp = await http.get(Uri.parse(Api.appliedSchemesList),
+          headers: userheader);
+      if (resp.statusCode == 200) {
+        return resp.body;
+      } else {
+        return falseResp;
+      }
+    } on TimeoutException catch (e) {
+      return timeoutrespon;
+    } catch (e) {
+      if (kDebugMode) print("error ---- $e");
+    }
+  }
+
   Future publishScheme(data, schemeId) {
     String url = Api.publish + schemeId;
+    return postData(Uri.parse(url), data);
+  }
+
+  Future acceptApplication(data, appId) {
+    String url = Api.acceptAppliedSchemesList + appId;
+    return postData(Uri.parse(url), data);
+  }
+
+  Future rejectApplication(data, appId) {
+    String url = Api.rejectAppliedSchemesList + appId;
     return postData(Uri.parse(url), data);
   }
 

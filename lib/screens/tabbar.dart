@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dsep_bpp/screens/applied_scheme.dart';
 import 'package:dsep_bpp/screens/home_screen.dart';
 import 'package:dsep_bpp/screens/profile.dart';
 import 'package:dsep_bpp/utils/colors_widget.dart';
@@ -112,7 +113,9 @@ class _TabbarState extends State<Tabbar> with SingleTickerProviderStateMixin {
                       autoPlayDelay: const Duration(seconds: 2),
                       autoPlay: true,
                     )
-              : Profile(),
+              : index == 1
+                  ? const Profile()
+                  : const AppliedScreens(),
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
               color: primaryColor,
@@ -171,6 +174,27 @@ class _TabbarState extends State<Tabbar> with SingleTickerProviderStateMixin {
                           )
                         ],
                       )),
+                  // SizedBox(
+                  //     width: 75,
+                  //     child: Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.center,
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       children: [
+                  //         const SizedBox(
+                  //           height: 3, //5,
+                  //         ),
+                  //         SvgPicture.asset('assets/images/profile_icon.svg',
+                  //             height: 10,
+                  //             fit: BoxFit.fill,
+                  //             color:
+                  //                 index == 1 ? whiteColor : greyColor.shade300),
+                  //         TextWidget(
+                  //           softwrap: true,
+                  //           text: "Applied Schemes",
+                  //           color: index == 1 ? whiteColor : greyColor.shade300,
+                  //         )
+                  //       ],
+                  //     )),
                 ]),
           ),
         ),

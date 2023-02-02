@@ -41,6 +41,7 @@ class _AddEligibilityState extends State<AddEligibility> {
   late double _bottom;
   late double _top;
   final FormeKey formKey = FormeKey();
+  bool switchValue = false;
   int courseDetailsIndex = 0;
   List<_EligibilityDetails> eligibilityDetailsWidgets = [];
   List<PastEducation> details = [];
@@ -56,12 +57,14 @@ class _AddEligibilityState extends State<AddEligibility> {
   List<TextEditingController> passingYear = [];
   static TextEditingController gender = TextEditingController();
   static TextEditingController familyIncome = TextEditingController();
+  static TextEditingController caste = TextEditingController();
   // static TextEditingController courseLevelName = TextEditingController();
   List<TextEditingController> scoreType = [];
 
   void getUpdatedValueAndSubmitForm(Map<String, dynamic> values) {
     values['Family Income'] = familyIncome.text;
     values['Gender'] = gender.text;
+    values['caste'] = caste.text;
 
     List list = [];
     // values['Course Level Name'] = courseLevelName.text;
@@ -78,7 +81,7 @@ class _AddEligibilityState extends State<AddEligibility> {
     values['academicDetails'] = list;
 
     eligibility = Eligibility(
-        // caste: values['Caste'],
+        caste: values['Caste'],
         // cityOrBlockOrTaluka: values['CityOrBlockOrTaluka'],
         // district: values['District'],
         familyIncome: values['Family Income'],
@@ -92,7 +95,8 @@ class _AddEligibilityState extends State<AddEligibility> {
         spocName: values['Spoc Name'],
         spocEmail: values['Spoc Email'],
         helpdeskNo: values['Help Desk No'],
-        passingYear: values['Passing Year']
+        passingYear: values['Passing Year'],
+        addtnlInfoReq: switchValue
 
         // nationality: values['Nationality'],
         //  pastEducation: details,
@@ -112,9 +116,11 @@ class _AddEligibilityState extends State<AddEligibility> {
     if (widget.routeFrom == "update") {
       routeForUpdate = true;
       spocData = widget.spocdata;
+      switchValue = spocData['addtnlInfoReq'];
       data = widget.data;
       gender.text = data['gender'] ?? "NA";
       familyIncome.text = data['familyIncome'] ?? 'Not Mandatory';
+      caste.text = data['caste'] ?? "";
       // courseLevelName.add(TextEditingController());
       // courseLevelName.text = data['acadDtls'][0]['courseLevelName'];
       // scoreType.text = data['acadDtls'][0]['scoreType'];
@@ -249,6 +255,58 @@ class _AddEligibilityState extends State<AddEligibility> {
                                   'more than 500000',
                                   'Not Mandatory'
                                 ],
+                                selectedvalue: familyIncome.text,
+                              );
+                            });
+                      },
+                      child: AbsorbPointer(
+                          child: TextFormField(
+                        controller: familyIncome,
+                        decoration: InputDecoration(
+                          suffixIcon: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(Icons.arrow_drop_down,
+                                color: Colors.black),
+                          ),
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          suffixIconConstraints:
+                              const BoxConstraints.tightFor(),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                  color: Colors.blue, width: 0.0)),
+                          //hintText: hint,
+                        ),
+                      )),
+                    ))
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 15.0, right: 10.0, top: 15.0),
+                  child: FormCaptionText('Caste', 0),
+                ),
+                Padding(
+                    padding: const EdgeInsets.only(
+                        left: 10.0, right: 10.0, top: 10.0),
+                    child: InkWell(
+                      onTap: () {
+                        FocusScope.of(context).unfocus();
+                        showModalBottomSheet<dynamic>(
+                            isScrollControlled: true,
+                            context: context,
+                            backgroundColor: Colors.transparent,
+                            builder: (BuildContext bc) {
+                              return Bottomsheet(
+                                onchanged: ((value) {
+                                  caste.text = value;
+                                  // Global.familyIncome.text = value;
+                                  setState(() {});
+                                }),
+                                values: const ['General', 'OBC', 'SC', 'ST'],
                                 selectedvalue: familyIncome.text,
                               );
                             });
@@ -467,6 +525,38 @@ class _AddEligibilityState extends State<AddEligibility> {
                     )
                   ],
                 ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 15.0, right: 10.0, top: 15.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const TextWidget(
+                        text: 'Additional Infromation \nRequired',
+                      ),
+                      Row(
+                        children: [
+                          const TextWidget(
+                            text: 'No',
+                          ),
+                          Switch(
+                            value: switchValue,
+                            activeColor: primaryColor,
+                            onChanged: (value) {
+                              switchValue = value;
+                              setState(() {});
+                            },
+                          ),
+                          const TextWidget(
+                            text: 'Yes',
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+
                 const SizedBox(
                   height: 20,
                 ),

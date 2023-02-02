@@ -61,10 +61,20 @@ class SplashScreenState extends State<SplashScreen>
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image.asset(
-                'assets/images/protean_logo.png',
-                width: animation.value * 250,
-                height: animation.value * 180,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/protean_logo.png',
+                    width: animation.value * 150,
+                    height: animation.value * 180,
+                  ),
+                  Image.asset(
+                    'assets/images/fossgen_logo.png',
+                    width: animation.value * 150,
+                    height: animation.value * 180,
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 10,
