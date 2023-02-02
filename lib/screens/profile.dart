@@ -119,39 +119,6 @@ class _ProfileState extends State<Profile> {
                 ]),
                 child: ListTile(
                   title: const Text(
-                    'Applied Schmes',
-                    style: TextStyle(
-                      fontFamily: AppTheme.fontName,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: AppTheme.darkText,
-                    ),
-                    textAlign: TextAlign.left,
-                  ),
-                  trailing: const Icon(
-                    Icons.list,
-                    color: Colors.black,
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: ((context) => const AppliedScreens())));
-                  },
-                ),
-              ),
-              Container(
-                height: 50,
-                alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(color: whiteColor, boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.shade300,
-                      blurRadius: 2,
-                      spreadRadius: 2)
-                ]),
-                child: ListTile(
-                  title: const Text(
                     'Sign Out',
                     style: TextStyle(
                       fontFamily: AppTheme.fontName,

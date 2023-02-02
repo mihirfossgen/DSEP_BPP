@@ -60,19 +60,6 @@ class _AppliedScreensState extends State<AppliedScreens> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return PlatformScaffold(
-        appBar: PlatformAppBar(
-          leading: PlatformIconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pop(context, {'details': null}),
-          ),
-          cupertino: (_, __) => CupertinoNavigationBarData(
-            // If this is enabled and set to true then the IconButton above will complain of no parent Material widget
-            noMaterialParent: true,
-          ),
-          backgroundColor: Theme.of(context).primaryColor,
-          title: const Text('Applied Schemes',
-              style: TextStyle(color: Colors.white)),
-        ),
         body: _isLoading ? Loader() : _body(screenHeight, screenWidth));
   }
 
@@ -113,8 +100,13 @@ class _AppliedScreensState extends State<AppliedScreens> {
                   children: [
                     Row(
                       children: [
+                        const Text(
+                          "Application ID :",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
                         Text(
-                          "Application ID : ${response[i]['appId']}",
+                          " ${response[i]['appId']}",
                           textAlign: TextAlign.start,
                           style: const TextStyle(fontWeight: FontWeight.w500),
                         ),
@@ -123,40 +115,17 @@ class _AppliedScreensState extends State<AppliedScreens> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Text(
-                      "Applicant Name : ${response[i]['applcntDtls']['person']['name']}",
-                      textAlign: TextAlign.end,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "Applied Date : ${dateformatter(response[i]['schemeStartDate'])}",
-                      textAlign: TextAlign.end,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "Scheme Name : ${response[i]['schemeDescription']}",
-                      textAlign: TextAlign.end,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
                     Row(
                       children: [
-                        Expanded(
-                            flex: 1,
-                            child: Text(
-                              "Scheme ID : ${response[i]['schemeProviderId']}",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                  fontSize: w * 0.037,
-                                  fontWeight: FontWeight.w500),
+                        const Text(
+                          "Applicant Name :",
+                          textAlign: TextAlign.end,
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        Text(" ${response[i]['applcntDtls']['person']['name']}",
+                            textAlign: TextAlign.end,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
                             )),
                       ],
                     ),
@@ -165,15 +134,56 @@ class _AppliedScreensState extends State<AppliedScreens> {
                     ),
                     Row(
                       children: [
-                        Expanded(
-                            flex: 1,
-                            child: Text(
-                              "Application Status: ${applicationStatus(response[i]['appStatus'].toString())}",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                  fontSize: w * 0.037,
-                                  fontWeight: FontWeight.w500),
-                            )),
+                        const Text(
+                          "Applied Date :",
+                          textAlign: TextAlign.end,
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          " ${dateformatter(response[i]['schemeStartDate'])}",
+                          textAlign: TextAlign.end,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        const Text(
+                          "Scheme Name :",
+                          textAlign: TextAlign.end,
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        Container(
+                          width: 210,
+                          child: Text(
+                            " ${response[i]['schemeName']}",
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Application Status:",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              fontSize: w * 0.037, fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          " ${applicationStatus(response[i]['appStatus'].toString())}",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              fontSize: w * 0.037, fontWeight: FontWeight.w500),
+                        ),
                       ],
                     ),
                     const SizedBox(

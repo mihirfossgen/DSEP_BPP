@@ -27,7 +27,7 @@ class _TabbarState extends State<Tabbar> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     tabController = TabController(
-      length: 2,
+      length: 3,
       vsync: this,
     );
     tabController.addListener(listener);
@@ -114,8 +114,8 @@ class _TabbarState extends State<Tabbar> with SingleTickerProviderStateMixin {
                       autoPlay: true,
                     )
               : index == 1
-                  ? const Profile()
-                  : const AppliedScreens(),
+                  ? const AppliedScreens()
+                  : const Profile(),
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
               color: primaryColor,
@@ -144,13 +144,31 @@ class _TabbarState extends State<Tabbar> with SingleTickerProviderStateMixin {
                             height: 3, //5,
                           ),
                           SvgPicture.asset('assets/images/home_icon.svg',
-                              height: 30,
+                              height: 25,
                               fit: BoxFit.fill,
                               color:
                                   index == 0 ? whiteColor : greyColor.shade300),
                           TextWidget(
                             text: "Home",
                             color: index == 0 ? whiteColor : greyColor.shade300,
+                          )
+                        ],
+                      )),
+                  SizedBox(
+                      width: 80,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            height: 3, //5,
+                          ),
+                          Icon(Icons.list,
+                              color:
+                                  index == 1 ? whiteColor : greyColor.shade300),
+                          TextWidget(
+                            text: "Applications",
+                            color: index == 1 ? whiteColor : greyColor.shade300,
                           )
                         ],
                       )),
@@ -164,37 +182,16 @@ class _TabbarState extends State<Tabbar> with SingleTickerProviderStateMixin {
                             height: 3, //5,
                           ),
                           SvgPicture.asset('assets/images/profile_icon.svg',
-                              height: 30,
+                              height: 25,
                               fit: BoxFit.fill,
                               color:
-                                  index == 1 ? whiteColor : greyColor.shade300),
+                                  index == 2 ? whiteColor : greyColor.shade300),
                           TextWidget(
                             text: "Profile",
-                            color: index == 1 ? whiteColor : greyColor.shade300,
+                            color: index == 2 ? whiteColor : greyColor.shade300,
                           )
                         ],
                       )),
-                  // SizedBox(
-                  //     width: 75,
-                  //     child: Column(
-                  //       crossAxisAlignment: CrossAxisAlignment.center,
-                  //       mainAxisAlignment: MainAxisAlignment.center,
-                  //       children: [
-                  //         const SizedBox(
-                  //           height: 3, //5,
-                  //         ),
-                  //         SvgPicture.asset('assets/images/profile_icon.svg',
-                  //             height: 10,
-                  //             fit: BoxFit.fill,
-                  //             color:
-                  //                 index == 1 ? whiteColor : greyColor.shade300),
-                  //         TextWidget(
-                  //           softwrap: true,
-                  //           text: "Applied Schemes",
-                  //           color: index == 1 ? whiteColor : greyColor.shade300,
-                  //         )
-                  //       ],
-                  //     )),
                 ]),
           ),
         ),
